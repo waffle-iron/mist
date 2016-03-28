@@ -34,6 +34,7 @@
                 "devToolsWalletUI": "Wallet UI",
                 "devToolsWebview": "__webview__",
                 "runTests": "Run tests",
+                "logFiles": "Show log file",
                 "ethereumNode": "Ethereum Node",
                 "network": "Network",
                 "mainNetwork": "Main Network",
@@ -48,6 +49,17 @@
             },
             "help": {
                 "label": "Help"
+            }
+        },
+        "errors": {
+            "nodeConnect": "Couldn't connect to node? See the logs for more:",
+            "nodeStartup": "It seems like the node couldn't be started, do you have already one running? Does it upgrades the database right now?",
+            "timeSync": {
+                "title": "Your computers clock is not synced.",
+                "description": "To successfully synchronize with the Ethereum network you need to sync your computers clock with a time sync server.",
+                "win32": "Go to your Internet Time Settings in your system preferences and check the box. See this guide for details: http://www.guidingtech.com/3119/windows-clock-sync/",
+                "linux": "To enable a time sync server install \"ntp\" via \"apt-get install ntp\".",
+                "darwin": "To enable time sync, open the time preferences and check \"Set the time and date automatically\"."
             }
         },
         "rightClick": {
@@ -116,7 +128,7 @@
                 "estimatedGasError": "Data can't be executed, so it will use all provided gas.",
                 "gasPrice": "Gas price",
                 "perMillionGas": "ether per million gas",
-                "providedGas": "Provided maximum fee",
+                "gasLimit": "Provide maximum fee",
                 "data": "Data",
                 "buttons": {
                     "sendTransaction": "Send transaction"
@@ -172,6 +184,6 @@
     },
     "elements": {
         "checksumAlert":"This address looks valid, but it doesn't have some security features that will protect you against typos, so double check you have the right one. If provided, check if the security icon matches.",
-        "identiconHelper": "This is a security icon, if there's any change on the address the resulting icon should be a completelly different one"
+        "identiconHelper": "This is a security icon, if there's any change on the address the resulting icon should be a completely different one"
     }
 }

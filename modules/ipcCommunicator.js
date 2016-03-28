@@ -5,6 +5,7 @@ Window communication
 */
 
 const app = require('app');  // Module to control application life.
+const appMenu = require('./menuItems');   
 const popupWindow = require('./popupWindow.js');
 const ipc = require('electron').ipcMain;
 
@@ -59,6 +60,18 @@ ipc.on('backendAction_sendToOwner', function(e, error, value) {
     }
 });
 
+ipc.on('backendAction_setLanguage', function(e, lang){
+    if(global.language !== lang) {
+        global.i18n.changeLanguage(lang.substr(0,2), function(err, t){
+            if(!err) {
+                global.language = global.i18n.language;
+                console.log('Backend language set to: ', global.language);
+                appMenu(global.webviews);
+            }
+        });
+    }
+});
+
 // import presale file
 ipc.on('backendAction_importPresaleFile', function(e, path, pw) {
     const spawn = require('child_process').spawn;
@@ -70,13 +83,14 @@ ipc.on('backendAction_importPresaleFile', function(e, path, pw) {
 
     nodeProcess.once('error',function(){
         error = true;
+        e.sender.send('uiAction_importedPresaleFile', 'Couldn\'t start the "geth wallet import <file.json>" process.');
     });
     nodeProcess.stdout.on('data', function(data) {
         var data = data.toString();
         if(data)
             console.log('Imported presale: ', data);
 
-        if(data.indexOf('Decryption failed:') !== -1) {
+        if(data.indexOf('Decryption failed:') !== -1 || data.indexOf('not equal to expected addr') !== -1) {
             e.sender.send('uiAction_importedPresaleFile', 'Decryption Failed');
 
         // if imported, return the address
@@ -100,10 +114,10 @@ ipc.on('backendAction_importPresaleFile', function(e, path, pw) {
     // file password
     setTimeout(function(){
         if(!error) {
-            nodeProcess.stdin.write(pw +"\r\n");
+            nodeProcess.stdin.write(pw +"\n");
             pw = null;
         }
-    }, 10);
+    }, 2000);
 });
 
 

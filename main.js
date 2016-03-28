@@ -2,12 +2,14 @@ global._ = require('underscore');
 const fs = require('fs');
 const electron = require('electron');
 const app = require('app');  // Module to control application life.
+const timesync = require("os-timesync");
 const BrowserWindow = require('browser-window');  // Module to create native browser window.
-const i18n = require('./modules/i18n.js');
 const Minimongo = require('./modules/minimongoDb.js');
 const syncMinimongo = require('./modules/syncMinimongo.js');
 const ipc = electron.ipcMain;
+const dialog = require('dialog');
 const packageJson = require('./package.json');
+const i18n = require('./modules/i18n.js');
 
 
 // GLOBAL Variables
@@ -38,6 +40,7 @@ var ipcPath = getIpcPath();
 
 global.mainWindow = null;
 global.windows = {};
+global.webviews = [];
 
 global.nodes = {
     geth: null,
@@ -161,6 +164,20 @@ app.on('before-quit', function(event){
 // }
 
 var appStartWindow;
+var nodeType = 'geth';
+var logFunction = function(data) {
+    data = data.toString().replace(/[\r\n]+/,'');
+    console.log('NODE LOG:', data);
+
+    if(~data.indexOf('Block synchronisation started') && global.nodes[nodeType]) {
+        global.nodes[nodeType].stdout.removeListener('data', logFunction);
+        global.nodes[nodeType].stderr.removeListener('data', logFunction);
+    }
+
+    // show line if its not empty or "------"
+    if(appStartWindow && !/^\-*$/.test(data))
+        appStartWindow.webContents.send('startScreenText', 'logText', data.replace(/^.*[0-9]\]/,''));
+};
 
 // This method will be called when Electron has done everything
 // initialization and ready for creating browser windows.
@@ -177,6 +194,7 @@ app.on('ready', function() {
 
     // add menu already here, so we have copy and past functionality
     appMenu();
+
 
     // appIcon = new Tray('./icons/icon-tray.png');
     // var contextMenu = Menu.buildFromTemplate([
@@ -197,7 +215,7 @@ app.on('ready', function() {
             title: global.appName,
             show: false,
             width: 1024 + 208,
-            height: 700,
+            height: 720,
             icon: global.icon,
             titleBarStyle: 'hidden-inset', //hidden-inset: more space
             backgroundColor: '#D2D2D2',
@@ -223,8 +241,8 @@ app.on('ready', function() {
         global.mainWindow = new BrowserWindow({
             title: global.appName,
             show: false,
-            width: 1024,
-            height: 680,
+            width: 1100,
+            height: 720,
             icon: global.icon,
             titleBarStyle: 'hidden-inset', //hidden-inset: more space
             backgroundColor: '#F6F6F6',
@@ -243,7 +261,7 @@ app.on('ready', function() {
         });
     }
 
-    var appStartWindow = new BrowserWindow({
+    appStartWindow = new BrowserWindow({
             title: global.appName,
             width: 400,
             height: 230,
@@ -261,6 +279,28 @@ app.on('ready', function() {
     appStartWindow.loadURL(global.interfacePopupsUrl + '#splashScreen_'+ global.mode);//'file://' + __dirname + '/interface/startScreen/'+ global.mode +'.html');
 
 
+    // check time sync
+    // var ntpClient = require('ntp-client');
+    // ntpClient.getNetworkTime("pool.ntp.org", 123, function(err, date) {
+    timesync.checkEnabled(function (err, enabled) {
+        if(err) {
+            console.error('Couldn\'t get time from NTP time sync server.', err);
+            return;
+        }
+
+        if(!enabled) {
+            dialog.showMessageBox({
+                type: "warning",
+                buttons: ['OK'],
+                message: global.i18n.t('mist.errors.timeSync.title'),
+                detail: global.i18n.t('mist.errors.timeSync.description') +"\n\n"+ global.i18n.t('mist.errors.timeSync.'+ process.platform)
+            }, function(){
+            });
+        }
+    });
+
+
+
     appStartWindow.webContents.on('did-finish-load', function() {
 
 
@@ -268,7 +308,7 @@ app.on('ready', function() {
         const checkNodeSync = require('./modules/checkNodeSync.js');
         const net = require('net');
         const socket = new net.Socket();
-        var intervalId = startingTimeout = null;
+        var intervalId = errorTimeout = null;
         var count = 0;
 
 
@@ -289,9 +329,8 @@ app.on('ready', function() {
                 if(appStartWindow)
                     appStartWindow.webContents.send('startScreenText', 'mist.startScreen.startingNode');
 
-                // read which node is used on this machine
-                var nodeType = 'geth';
 
+                // read which node is used on this machine
                 try {
                     nodeType = fs.readFileSync(global.path.USERDATA + '/node', {encoding: 'utf8'});
                 } catch(e){
@@ -303,31 +342,38 @@ app.on('ready', function() {
                 console.log('Node type: ', nodeType);
                 console.log('Network: ', global.network);
 
-                // If nothing else happens, show an error message in 60 seconds, with the node log text
-                startingTimeout = setTimeout(function(){
+
+                // If nothing else happens, show an error message in 120 seconds, with the node log text
+                errorTimeout = setTimeout(function(){
                     if(appStartWindow)
                         appStartWindow.webContents.send('startScreenText', 'mist.startScreen.nodeConnectionTimeout', ipcPath);
 
-                    clearInterval(intervalId);
-                    clearSocket(socket, true);
-
-                    var dialog = require('dialog'),
-                        log = '';
+                    var log = '';
                     try {
                         log = fs.readFileSync(global.path.USERDATA + '/node.log', {encoding: 'utf8'});
                         log = '...'+ log.slice(-1000);
                     } catch(e){
-                        log = 'Node couldn\'t be started, please create an issue in http://github.com/ethereum/mist/issues';
+                        log = global.i18n.t('mist.errors.nodeStartup');
                     };
 
                     // add node type
-                    log = 'Node type: '+ nodeType + "\n" + 'Network: '+ global.network + "\n" + 'Platform: '+ process.platform +"\n\n" + log;
+                    log = 'Node type: '+ nodeType + "\n" +
+                        'Network: '+ global.network + "\n" +
+                        'Platform: '+ process.platform +' (Architecure '+ process.arch +')'+"\n\n" +
+                        log;
 
-                    dialog.showErrorBox('Node crashed, please create an issue in http://github.com/ethereum/mist/issues and supply the following information:', log);
+                    dialog.showMessageBox({
+                        type: "error",
+                        buttons: ['OK'],
+                        message: global.i18n.t('mist.errors.nodeConnect'),
+                        detail: log
+                    }, function(){
+                    });
 
-                }, 30 * 1000);
+                }, 120 * 1000);
 
 
+                // -> START NODE
                 ethereumNodes.startNode(nodeType, (global.network === 'test'), function(e){
                     // TRY TO CONNECT EVERY 500MS
                     if(!e) {
@@ -336,6 +382,11 @@ app.on('ready', function() {
                                 socket.connect({path: ipcPath});
                         }, 200);
 
+                        // log data to the splash screen
+                        if(global.nodes[nodeType]) {
+                            global.nodes[nodeType].stdout.on('data', logFunction);
+                            global.nodes[nodeType].stderr.on('data', logFunction);
+                        }
 
                     // NO Binary
                     } else {
@@ -344,14 +395,16 @@ app.on('ready', function() {
                             appStartWindow.webContents.send('startScreenText', 'mist.startScreen.nodeBinaryNotFound');
                         }
 
-                        clearTimeout(startingTimeout);
+                        clearTimeout(errorTimeout);
                         clearSocket(socket, true);
                     }
                 });
+
             }
         });
         socket.on('connect', function(data){
             console.log('Geth connection FOUND');
+
             if(appStartWindow) {
                 if(count === 0)
                     appStartWindow.webContents.send('startScreenText', 'mist.startScreen.runningNodeFound');
@@ -360,7 +413,8 @@ app.on('ready', function() {
             }
 
             clearInterval(intervalId);
-            clearTimeout(startingTimeout);
+            clearTimeout(errorTimeout);
+
 
             // update menu, to show node switching possibilities
             appMenu();
@@ -446,9 +500,15 @@ Start the main window and all its processes
 */
 var startMainWindow = function(appStartWindow){
 
+    // remove the splash screen logger
+    if(global.nodes[nodeType]) {
+        global.nodes[nodeType].stdout.removeListener('data', logFunction);
+        global.nodes[nodeType].stderr.removeListener('data', logFunction);
+    }
+
     // and load the index.html of the app.
     console.log('Loading Interface at '+ global.interfaceAppUrl);
-    global.mainWindow.loadURL(global.interfaceAppUrl); // 'file:///Users/frozeman/Sites/_ethereum/meteor-dapp-wallet/build/index.html'
+    global.mainWindow.loadURL(global.interfaceAppUrl);
 
     global.mainWindow.webContents.on('did-finish-load', function() {
         popupWindow.loadingWindow.hide();
@@ -475,13 +535,7 @@ var startMainWindow = function(appStartWindow){
     // instantiate the application menu
     // ipc.on('setupWebviewDevToolsMenu', function(e, webviews){
     Tracker.autorun(function(){
-        var webviews = Tabs.find({},{sort: {position: 1}, fields: {name: 1, _id: 1}}).fetch();
-        appMenu(webviews || []);
+        global.webviews = Tabs.find({},{sort: {position: 1}, fields: {name: 1, _id: 1}}).fetch();
+        appMenu(global.webviews);
     });
-
-    // instantiate the application menu
-    // ipc.on('setLanguage', function(e, lang){
-    //     global.language = lang;
-
-    // });
 };
