@@ -7,7 +7,10 @@ Window communication
 const app = require('app');  // Module to control application life.
 const appMenu = require('./menuItems');   
 const popupWindow = require('./popupWindow.js');
+const log = require('./utils/logger').create('ipcCommunicator');
 const ipc = require('electron').ipcMain;
+
+const _ = global._;
 
 /*
 
@@ -32,32 +35,38 @@ ipc.on('backendAction_closeApp', function() {
     app.quit();
 });
 ipc.on('backendAction_closePopupWindow', function(e) {
-    var windowId = e.sender.getId();
+    var windowId = e.sender.getId(),
+        senderWindow = global.windows[windowId];
 
-    if(global.windows[windowId]) {
-        global.windows[windowId].window.close();
+    if(senderWindow) {
+        senderWindow.window.close();
         delete global.windows[windowId];
     }
 });
 ipc.on('backendAction_setWindowSize', function(e, width, height) {
-    var windowId = e.sender.getId();
+    var windowId = e.sender.getId(),
+        senderWindow = global.windows[windowId];
 
-    if(global.windows[windowId]) {
-        global.windows[windowId].window.setSize(width, height);
-        global.windows[windowId].window.center(); // ?
+    if(senderWindow) {
+        senderWindow.window.setSize(width, height);
+        senderWindow.window.center(); // ?
     }
 });
 
 ipc.on('backendAction_sendToOwner', function(e, error, value) {
-    var windowId = e.sender.getId();
+    var windowId = e.sender.getId(),
+        senderWindow = global.windows[windowId];
 
-    if(global.windows[windowId]) {
-        global.windows[windowId].owner.send('windowMessage', global.windows[windowId].type, error, value);
+    var mainWindow = global.mainWindow;
 
+    if (_.get(senderWindow, 'owner')) {
+        senderWindow.owner.send('windowMessage', senderWindow.type, error, value);
+
+        if(mainWindow && mainWindow.webContents && !mainWindow.webContents.isDestroyed()) {
+            mainWindow.webContents.send('mistUI_windowMessage', senderWindow.type, senderWindow.owner.getId(), error, value);
+        }
     }
-    if(global.mainWindow && global.mainWindow.webContents && !global.mainWindow.webContents.isDestroyed()) {
-        global.mainWindow.webContents.send('mistUI_windowMessage', global.windows[windowId].type, global.windows[windowId].owner.getId(), error, value);
-    }
+
 });
 
 ipc.on('backendAction_setLanguage', function(e, lang){
@@ -65,7 +74,7 @@ ipc.on('backendAction_setLanguage', function(e, lang){
         global.i18n.changeLanguage(lang.substr(0,2), function(err, t){
             if(!err) {
                 global.language = global.i18n.language;
-                console.log('Backend language set to: ', global.language);
+                log.info('Backend language set to: ', global.language);
                 appMenu(global.webviews);
             }
         });
@@ -88,9 +97,9 @@ ipc.on('backendAction_importPresaleFile', function(e, path, pw) {
     nodeProcess.stdout.on('data', function(data) {
         var data = data.toString();
         if(data)
-            console.log('Imported presale: ', data);
+            log.info('Imported presale: ', data);
 
-        if(data.indexOf('Decryption failed:') !== -1 || data.indexOf('not equal to expected addr') !== -1) {
+        if(/Decryption failed|not equal to expected addr|could not decrypt/.test(data)) {
             e.sender.send('uiAction_importedPresaleFile', 'Decryption Failed');
 
         // if imported, return the address
