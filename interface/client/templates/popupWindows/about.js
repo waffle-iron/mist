@@ -32,7 +32,7 @@ Template['popupWindows_about'].helpers({
     @method name
     */
     'name': function(){
-        return (mode === 'mist') ? 'Mist' : 'Ethereum Wallet';
+        return (mode === 'mist') ? 'Mist' : 'Expanse Wallet';
     },
     /**
     Returns mist api

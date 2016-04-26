@@ -44,7 +44,7 @@ Get the current user agent
 @method (useragent)
 **/
 Template.registerHelper('useragent', function(){
-    return navigator.userAgent + ' Ethereum ' + (mist.mode === 'mist' ? 'Mist' : 'Wallet');
+    return navigator.userAgent + ' Expanse ' + (mist.mode === 'mist' ? 'Mist' : 'Wallet');
 });
 
 /**

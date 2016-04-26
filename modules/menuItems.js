@@ -93,15 +93,15 @@ var menuTempl = function(webviews) {
                             // geth
                             } else {
                                 if(process.platform === 'darwin')
-                                    path += '/Library/Ethereum/keystore';
+                                    path += '/Library/Expanse/keystore';
 
                                 if(process.platform === 'freebsd' ||
                                    process.platform === 'linux' ||
                                    process.platform === 'sunos')
-                                    path += '/.ethereum/keystore';
+                                    path += '/.expanse/keystore';
 
                                 if(process.platform === 'win32')
-                                    path = global.path.APPDATA + '\\Ethereum\\keystore';
+                                    path = global.path.APPDATA + '\\Expanse\\keystore';
                             }
 
                             shell.showItemInFolder(path);
@@ -258,7 +258,7 @@ var menuTempl = function(webviews) {
             label: i18n.t('mist.applicationMenu.develop.ethereumNode'),
             submenu: [
               {
-                label: 'Geth 1.3.6 (Go)',
+                label: 'Gexp 1.3.6 (Go)',
                 checked: !!global.nodes.geth,
                 enabled: !!((global.nodes.geth || global.nodes.eth) && !global.nodes.geth),
                 type: 'checkbox',

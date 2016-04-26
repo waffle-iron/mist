@@ -100,9 +100,9 @@ gulp.task('set-variables-mist', function () {
 });
 gulp.task('set-variables-wallet', function () {
     type = 'wallet';
-    filenameLowercase = 'ethereum-wallet';
-    filenameUppercase = 'Ethereum-Wallet';
-    applicationName = 'Ethereum Wallet';
+    filenameLowercase = 'expanse-wallet';
+    filenameUppercase = 'Expanse-Wallet';
+    applicationName = 'Expanse Wallet';
 });
 
 
@@ -122,8 +122,8 @@ gulp.task('copy-files', ['clean:dist'], function() {
         './icons/'+ type +'/*.*',
         './*.*',
         '!./interface/**/*.*',
-        '!./geth',
-        '!./geth.exe',
+        '!./gexp',
+        '!./gexp.exe',
         '!./main.js',
         '!./Wallet-README.txt'
         ], { base: './' })
@@ -162,9 +162,9 @@ gulp.task('bundling-interface', ['clean:dist', 'copy-files'], function(cb) {
             });
 
         } else {
-            console.log('Pulling https://github.com/ethereum/meteor-dapp-wallet/tree/'+ options.walletSource +' "'+ options.walletSource +'" branch...');
+            console.log('Pulling https://github.com/expanse-org/meteor-dapp-wallet/tree/'+ options.walletSource +' "'+ options.walletSource +'" branch...');
             exec('cd interface/ && meteor-build-client ../dist_'+ type +'/app/interface/ -p "" &&'+
-                 'cd ../dist_'+ type +'/ && git clone https://github.com/ethereum/meteor-dapp-wallet.git && cd meteor-dapp-wallet/app && meteor-build-client ../../app/interface/wallet -p "" && cd ../../ && rm -rf meteor-dapp-wallet', function (err, stdout, stderr) {
+                 'cd ../dist_'+ type +'/ && git clone https://github.com/expanse-org/meteor-dapp-wallet.git && cd meteor-dapp-wallet/app && meteor-build-client ../../app/interface/wallet -p "" && cd ../../ && rm -rf meteor-dapp-wallet', function (err, stdout, stderr) {
                 console.log(stdout);
                 console.log(stderr);
 
@@ -197,8 +197,8 @@ gulp.task('create-binaries', ['copy-i18n'], function(cb) {
         'build-version': electronVersion,
         // DO AFTER: codesign --deep --force --verbose --sign "5F515C07CEB5A1EC3EEB39C100C06A8C5ACAE5F4" Ethereum-Wallet.app
         //'sign': '3rd Party Mac Developer Application: Stiftung Ethereum (3W6577R383)',
-        'app-bundle-id': 'com.ethereum.'+ type,
-        'helper-bundle-id': 'com.ethereum.'+ type + '.helper',
+        'app-bundle-id': 'com.expanse.'+ type,
+        'helper-bundle-id': 'com.expanse.'+ type + '.helper',
         //'helper-bundle-id': 'com.github.electron.helper',
         // cache: './dist_'+ type +'/', // directory of cached electron downloads. Defaults to '$HOME/.electron'
         ignore: '', //do not copy files into App whose filenames regex .match this string
@@ -266,15 +266,15 @@ gulp.task('change-files', ['create-binaries'], function() {
 
         // copy eth node binaries
         streams.push(gulp.src([
-            './nodes/eth/'+ os + '/*'
+            './nodes/exp/'+ os + '/*'
             ])
-            .pipe(gulp.dest(destPath +'/eth')));
+            .pipe(gulp.dest(destPath +'/exp')));
 
         // copy geth node binaries
         streams.push(gulp.src([
-            './nodes/geth/'+ os + '/*'
+            './nodes/gexp/'+ os + '/*'
             ])
-            .pipe(gulp.dest(destPath +'/geth')));
+            .pipe(gulp.dest(destPath +'/gexp')));
 
     });
 

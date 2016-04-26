@@ -12,15 +12,15 @@ module.exports = function() {
     var path = global.path.HOME;
 
     if(process.platform === 'darwin')
-        path += '/Library/Ethereum/geth.ipc';
+        path += '/Library/Expanse/gexp.ipc';
 
     if(process.platform === 'freebsd' ||
        process.platform === 'linux' ||
        process.platform === 'sunos')
-        path += '/.ethereum/geth.ipc';
+        path += '/.expanse/gexp.ipc';
 
     if(process.platform === 'win32')
-        path = '\\\\.\\pipe\\geth.ipc';
+        path = '\\\\.\\pipe\\gexp.ipc';
     
     log.debug('CONNECT to IPC PATH: '+ path);
 
