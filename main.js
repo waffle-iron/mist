@@ -18,8 +18,8 @@ const argv = require('yargs')
     .usage('Usage: $0 [options]')
     .describe('version', 'Display app version')
     .describe('mode', 'App mode: wallet, mist (default)')
-    .describe('gethpath', 'Path to geth executable to use instead of default')
-    .describe('ethpath', 'Path to eth executable to use instead of default')
+    .describe('gethpath', 'Path to gexp executable to use instead of default')
+    .describe('ethpath', 'Path to exp executable to use instead of default')
     .describe('ignore-gpu-blacklist', 'Ignores GPU blacklist (needed for some Linux installations)')
     .describe('logfile', 'Logs will be written to this file')
     .describe('loglevel', 'Minimum logging threshold: trace (all logs), debug, info (default), warn, error')
@@ -361,7 +361,7 @@ app.on('ready', function() {
 
         // try to connect
         socket.on('error', function(e){
-            log.debug('Geth connection REFUSED', count);
+            log.debug('Gexp connection REFUSED', count);
 
             // if no geth is running, try starting your own
             if(count === 0) {
@@ -446,7 +446,7 @@ app.on('ready', function() {
             }
         });
         socket.on('connect', function(data){
-            log.info('Geth connection FOUND');
+            log.info('Gexp connection FOUND');
 
             if(appStartWindow) {
                 if(count === 0)

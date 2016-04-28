@@ -1,9 +1,9 @@
 #!/bin/bash
 
 # Name of your app.
-APP="Ethereum-Wallet"
+APP="Expanse-Wallet"
 # The path of you app to sign.
-APP_PATH="dist_wallet/Ethereum-Wallet-macosx64-0-4-0/Ethereum-Wallet.app"
+APP_PATH="dist_wallet/Expanse-Wallet-macosx64-0-4-0/Expanse-Wallet.app"
 # The path to the location you want to put the signed package.
 RESULT_PATH="dist_wallet/$APP.pkg"
 # The name of certificates you requested.

@@ -25,7 +25,7 @@
                         <span class="simptip-position-bottom simptip-movable" data-tooltip="{{from}}">{{shortenAddress from}}</span>
                     </div>
                     <div class="amount">
-                        {{{totalAmount}}} <span class="unit">ETHER</span>
+                        {{{totalAmount}}} <span class="unit">EXP</span>
 
                         {{#if executionFunction}}
                             <span class="execute-function">{{executionFunction}}</span>
@@ -76,7 +76,7 @@
                                 {{i18n "mist.popupWindows.sendTransactionConfirmation.gasLimit"}}
                             </td>
                             <td>
-                                {{providedGas}} ether (<span class="provided-gas" contenteditable="true">{{dapp_formatNumber (TemplateVar.get 'initialProvidedGas') '0'}}</span> gas)
+                                {{providedGas}} exp (<span class="provided-gas" contenteditable="true">{{dapp_formatNumber (TemplateVar.get 'initialProvidedGas') '0'}}</span> gas)
                             </td>
                         </tr>
                         <tr>

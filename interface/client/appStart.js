@@ -26,7 +26,7 @@ mistInit = function(){
             });
             
             Tabs.insert({
-                url: 'http://ethereum-dapp-wallet.meteor.com',
+                url: 'http://expanse-dapp-wallet.meteor.com',
                 position: 1,
                 permissions: {
                     accounts: web3.eth.accounts

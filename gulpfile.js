@@ -207,7 +207,7 @@ gulp.task('create-binaries', ['copy-i18n'], function(cb) {
         asar: true,
         // sign: '',
         'version-string': {
-            CompanyName: 'Stiftung Ethereum',
+            CompanyName: 'Expanse Org',
             // LegalCopyright
             // FileDescription
             // OriginalFilename
