@@ -102,7 +102,7 @@ Template['popupWindows_sendTransactionConfirmation'].helpers({
     @method (totalAmount)
     */
     'totalAmount': function(){
-        var amount = EthTools.formatBalance(this.value, '0,0.00[0000000000000000]', 'exp');
+        var amount = ExpTools.formatBalance(this.value, '0,0.00[0000000000000000]', 'expanse');
         var dotPos = (~amount.indexOf('.')) ? amount.indexOf('.') + 3 : amount.indexOf(',') + 3;
 
         return amount ? amount.substr(0, dotPos) + '<small style="font-size: 0.5em;">'+ amount.substr(dotPos) +'</small>' : '0';
@@ -115,7 +115,7 @@ Template['popupWindows_sendTransactionConfirmation'].helpers({
     'estimatedFee': function() {
         var gas =  TemplateVar.get('estimatedGas');
         if(gas && this.gasPrice)
-            return EthTools.formatBalance(new BigNumber(gas, 10).times(new BigNumber(this.gasPrice, 10)), '0,0.0[0000000] unit', 'exp');
+            return ExpTools.formatBalance(new BigNumber(gas, 10).times(new BigNumber(this.gasPrice, 10)), '0,0.0[0000000] unit', 'expanse');
     },
     /**
     Calculates the provided gas amount in ether
@@ -125,7 +125,7 @@ Template['popupWindows_sendTransactionConfirmation'].helpers({
     'providedGas': function() {
         var gas =  TemplateVar.get('providedGas');
         if(gas && this.gasPrice)
-            return EthTools.formatBalance(new BigNumber(gas, 10).times(new BigNumber(this.gasPrice, 10)), '0,0.0[0000000]', 'exp');
+            return ExpTools.formatBalance(new BigNumber(gas, 10).times(new BigNumber(this.gasPrice, 10)), '0,0.0[0000000]', 'expanse');
     },
     /**
     Shortens the address to 0xffff...ffff
