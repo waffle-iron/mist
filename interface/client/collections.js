@@ -7,7 +7,7 @@
 // BROWSER RELATED
 // Contains the accounts
 Tabs = new Mongo.Collection('tabs', {connection: null});
-pers = new PersistentMinimongo2(Tabs, 'Mist');
+pers = new PersistentMinimongo2(Tabs, 'Mist-Expanse');
 
 if(typeof syncMinimongo !== 'undefined')
     syncMinimongo(Tabs);
@@ -15,15 +15,15 @@ if(typeof syncMinimongo !== 'undefined')
 
 // Contains the address book
 AddressBook = new Mongo.Collection('address-book', {connection: null});
-new PersistentMinimongo2(AddressBook, 'Mist');
+new PersistentMinimongo2(AddressBook, 'Mist-Expanse');
 
 
 // Contains the accounts
 DoogleLastVisitedPages = new Mongo.Collection('doogle-last-visted-pages', {connection: null});
-new PersistentMinimongo2(DoogleLastVisitedPages, 'Mist');
+new PersistentMinimongo2(DoogleLastVisitedPages, 'Mist-Expanse');
 
 DoogleHistory = new Mongo.Collection('doogle-history', {connection: null});
-new PersistentMinimongo2(DoogleHistory, 'Mist');
+new PersistentMinimongo2(DoogleHistory, 'Mist-Expanse');
 
 
 
@@ -35,7 +35,7 @@ new PersistentMinimongo2(DoogleHistory, 'Mist');
 
 // contains blockchain meta data
 // LastBlock = new Mongo.Collection('lastblock', {connection: null});
-// new PersistentMinimongo2(LastBlock, 'Mist');
+// new PersistentMinimongo2(LastBlock, 'Mist-Expanse');
 // if(!LastBlock.findOne('latest'))
 //     LastBlock.insert({
 //         _id: 'latest',
