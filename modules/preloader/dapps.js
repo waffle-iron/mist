@@ -6,7 +6,7 @@ const mist = require('../mistAPI.js');
 const shell = require('shell');
 const BigNumber = require('bignumber.js');
 const ipcProviderWrapper = require('../ipc/ipcProviderWrapper.js');
-var Web3 = require('web3');
+var Web3 = require('@expanse/web3');
 const basePath = require('../setBasePath.js');
 require('../getFavicon.js');
 require('../getMetaTags.js');
