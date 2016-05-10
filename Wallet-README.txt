@@ -31,10 +31,10 @@ You need to make sure that the account displayed for the original wallet creatio
 
 The paths which store your wallets database and node are different:
 
-The wallet (Mist) stores its data at:
-- Mac: ~/Library/Application Support/Mist
-- Win: C:\users\app data\roaming\Mist
-- Linux: ~/.config/Mist
+The expanse wallet (Mist) stores its data at:
+- Mac: ~/Library/Application Support/Mist-Expanse
+- Win: C:\users\app data\roaming\Mist-Expanse
+- Linux: ~/.config/Mist-Expanse
 
 The nodes data is stored at:
 - Mac: ~/Library/Expanse

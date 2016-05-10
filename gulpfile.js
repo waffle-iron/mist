@@ -31,9 +31,9 @@ else
 
 // CONFIG
 var type = 'mist';
-var filenameLowercase = 'mist';
-var filenameUppercase = 'Mist';
-var applicationName = 'Mist'; 
+var filenameLowercase = 'mist-expanse';
+var filenameUppercase = 'Mist-expanse';
+var applicationName = 'Mist-expanse'; 
 
 var electronVersion = '0.37.2';
 var osVersions = [];
@@ -94,9 +94,9 @@ var createNewFileName = function(os) {
 // TASKS
 gulp.task('set-variables-mist', function () {
     type = 'mist';
-    filenameLowercase = 'mist';
-    filenameUppercase = 'Mist';
-    applicationName = 'Mist';
+    filenameLowercase = 'mist-expanse';
+    filenameUppercase = 'Mist-expanse';
+    applicationName = 'Mist-expanse';
 });
 gulp.task('set-variables-wallet', function () {
     type = 'wallet';

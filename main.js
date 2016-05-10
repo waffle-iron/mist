@@ -48,7 +48,7 @@ global.path = {
     USERDATA: app.getPath('userData') // Application Aupport/Mist
 };
 
-global.appName = 'Mist';
+global.appName = 'Mist-Expanse';
 
 global.production = false;
 

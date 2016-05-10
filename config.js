@@ -1,6 +1,6 @@
 
 var config = {
-    name: 'Mist',
+    name: 'Mist-Expanse',
 };
 
 // change for wallet
