@@ -23,7 +23,7 @@ module.exports = {
 
         var node = global.nodes.geth || global.nodes.eth;
 
-        // kill running geth
+        // kill running gexp
         if(node) {
             node.stderr.removeAllListeners('data');
             node.stdout.removeAllListeners('data');
@@ -58,7 +58,7 @@ module.exports = {
     Starts a node of type
 
     @method startNode
-    @param {String} type the node e.g. "geth" or "eth"
+    @param {String} type the node e.g. "gexp" or "exp"
     @param {Boolean} testnet
     @param {Function} callback will be called after successfull start
     */
@@ -70,7 +70,7 @@ module.exports = {
 
         log.info('Start node from '+ binPath);
 
-        if(type === 'eth') {
+        if(type === 'exp') {
 
             var modalWindow = popupWindow.show('unlockMasterPassword', {width: 400, height: 220, alwaysOnTop: true}, null, null, true);
             modalWindow.on('closed', function() {
@@ -175,11 +175,11 @@ module.exports = {
 
             // START TESTNET
             if(testnet) {
-                args = (type === 'geth') ? ['--testnet', '--fast'] : ['--morden', '--unsafe-transactions'];
+                args = (type === 'gexp') ? ['--testnet', '--fast'] : ['--morden', '--unsafe-transactions'];
 
             // START MAINNET
             } else {
-                args = (type === 'geth') ? ['--fast', '--cache','512'] : ['--unsafe-transactions', '--master', pw];
+                args = (type === 'gexp') ? ['--fast', '--cache','512'] : ['--unsafe-transactions', '--master', pw];
                 pw = null;
             }
 
@@ -196,9 +196,9 @@ module.exports = {
                     if(popupCallback) {
                         popupCallback('noBinary');
 
-                        // set default to geth, to prevent beeing unable to start the wallet
-                        if(type === 'eth')
-                            _this._writeNodeToFile('geth', testnet);
+                        // set default to gexp, to prevent beeing unable to start the wallet
+                        if(type === 'exp')
+                            _this._writeNodeToFile('gexp', testnet);
                     }
                 }
             });
@@ -207,13 +207,13 @@ module.exports = {
             global.nodes[type].once('exit',function(){
 
                 // If is eth then the password was typed wrong
-                if(!cbCalled && type === 'eth') {
+                if(!cbCalled && type === 'exp') {
 
                     if(popupCallback)
                         popupCallback('passwordWrong');
 
-                    // set default to geth, to prevent beeing unable to start the wallet
-                    _this._writeNodeToFile('geth', testnet);
+                    // set default to gexp, to prevent beeing unable to start the wallet
+                    _this._writeNodeToFile('gexp', testnet);
 
                     log.warn('Password wrong '+ type +' node!');
                 }
@@ -224,8 +224,8 @@ module.exports = {
 
                 if(!cbCalled && _.isFunction(callback)){
 
-                    // (eth) prevent starting, when "Ethereum (++)" didn't appear yet (necessary for the master pw unlock)
-                    if(type === 'eth' && data.toString().indexOf('Ethereum (++)') === -1)
+                    // (exp) prevent starting, when "Expanse (++)" didn't appear yet (necessary for the master pw unlock)
+                    if(type === 'exp' && data.toString().indexOf('Expanse (++)') === -1)
                         return;
                     else if(popupCallback)
                         popupCallback(null);
@@ -237,15 +237,15 @@ module.exports = {
             global.nodes[type].stderr.pipe(logFile);
             global.nodes[type].stderr.on('data', function(data) {
 
-                // dont react on stderr when eth++
-                if(type === 'eth')
+                // dont react on stderr when exp++
+                if(type === 'exp')
                     return;
 
                 // console.log('stderr ', data.toString());
                 if(!cbCalled && _.isFunction(callback)) {
 
-                    // (geth) prevent starying until IPC service is started
-                    if(type === 'geth' && data.toString().indexOf('IPC service started') === -1)
+                    // (gexp) prevent starying until IPC service is started
+                    if(type === 'gexp' && data.toString().indexOf('IPC service started') === -1)
                         return;
 
                     callCb(null);

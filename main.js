@@ -167,7 +167,7 @@ app.on('before-quit', function(event){
     if(!killedSockets)
         event.preventDefault();
 
-    // CLEAR open IPC sockets to geth
+    // CLEAR open IPC sockets to gexp
     _.each(global.sockets, function(socket){
         if(socket) {
             log.info('Closing socket', socket.id);
@@ -204,7 +204,7 @@ app.on('before-quit', function(event){
 // }
 
 var appStartWindow;
-var nodeType = 'geth';
+var nodeType = 'gexp';
 var logFunction = function(data) {
     data = data.toString().replace(/[\r\n]+/,'');
     log.trace('NODE LOG:', data);
@@ -346,7 +346,7 @@ app.on('ready', function() {
     appStartWindow.webContents.on('did-finish-load', function() {
 
 
-        // START GETH
+        // START gexp
         const checkNodeSync = require('./modules/checkNodeSync.js');
         const net = require('net');
         const socket = new net.Socket();
@@ -363,7 +363,7 @@ app.on('ready', function() {
         socket.on('error', function(e){
             log.debug('Gexp connection REFUSED', count);
 
-            // if no geth is running, try starting your own
+            // if no gexp is running, try starting your own
             if(count === 0) {
                 count++;
 
@@ -489,7 +489,7 @@ app.on('ready', function() {
                     var geth = !!global.nodes.geth;
 
                     ethereumNodes.stopNodes(function(){
-                        ethereumNodes.startNode(geth ? 'geth' : 'eth', testnet, function(){
+                        ethereumNodes.startNode(geth ? 'gexp' : 'exp', testnet, function(){
                             log.info('Changed to ', (testnet ? 'testnet' : 'mainnet'));
                             appMenu();
                         });

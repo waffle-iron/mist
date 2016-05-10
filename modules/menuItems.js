@@ -90,7 +90,7 @@ var menuTempl = function(webviews) {
                                 else
                                     path += '/.web3/keys';
                             
-                            // geth
+                            // gexp
                             } else {
                                 if(process.platform === 'darwin')
                                     path += '/Library/Expanse/keystore';
@@ -265,7 +265,7 @@ var menuTempl = function(webviews) {
                 click: function(){
                     ethereumNodes.stopNodes(function(){
                         popupWindow.loadingWindow.show();
-                        ethereumNodes.startNode('geth', false, function(){
+                        ethereumNodes.startNode('gexp', false, function(){
                             popupWindow.loadingWindow.hide();
                             global.mainWindow.loadURL(global.interfaceAppUrl);
                             createMenu(webviews);
@@ -274,14 +274,14 @@ var menuTempl = function(webviews) {
                 }
               },
               {
-                label: 'Eth 1.2.4 (C++) [experimental!]',
+                label: 'Exp 1.2.4 (C++) [experimental!]',
                 checked: !!global.nodes.eth,
                 enabled: !!((global.nodes.geth || global.nodes.eth) && !global.nodes.eth),
                 type: 'checkbox',
                 click: function(){
                     ethereumNodes.stopNodes(function(){
                         popupWindow.loadingWindow.show();
-                        ethereumNodes.startNode('eth', false, function(){
+                        ethereumNodes.startNode('exp', false, function(){
                             popupWindow.loadingWindow.hide();
                             global.mainWindow.loadURL(global.interfaceAppUrl);
                             createMenu(webviews);
@@ -307,7 +307,7 @@ var menuTempl = function(webviews) {
 
                 ethereumNodes.stopNodes(function(){
                     popupWindow.loadingWindow.show();
-                    ethereumNodes.startNode(geth ? 'geth' : 'eth', false, function(){
+                    ethereumNodes.startNode(geth ? 'gexp' : 'exp', false, function(){
                         popupWindow.loadingWindow.hide();
                         global.mainWindow.loadURL(global.interfaceAppUrl);
                         createMenu(webviews);
@@ -326,7 +326,7 @@ var menuTempl = function(webviews) {
 
                 ethereumNodes.stopNodes(function(){
                     popupWindow.loadingWindow.show();
-                    ethereumNodes.startNode(geth ? 'geth' : 'eth', true, function(){
+                    ethereumNodes.startNode(geth ? 'gexp' : 'exp', true, function(){
                         popupWindow.loadingWindow.hide();
                         global.mainWindow.loadURL(global.interfaceAppUrl);
                         createMenu(webviews);

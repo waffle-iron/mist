@@ -270,7 +270,7 @@ gulp.task('change-files', ['create-binaries'], function() {
             ])
             .pipe(gulp.dest(destPath +'/exp')));
 
-        // copy geth node binaries
+        // copy gexp node binaries
         streams.push(gulp.src([
             './nodes/gexp/'+ os + '/*'
             ])

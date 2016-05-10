@@ -118,7 +118,7 @@ Template['popupWindows_sendTransactionConfirmation'].helpers({
             return ExpTools.formatBalance(new BigNumber(gas, 10).times(new BigNumber(this.gasPrice, 10)), '0,0.0[0000000] unit', 'expanse');
     },
     /**
-    Calculates the provided gas amount in ether
+    Calculates the provided gas amount in expanse
 
     @method (providedGas)
     */
@@ -163,7 +163,7 @@ Template['popupWindows_sendTransactionConfirmation'].helpers({
 
 Template['popupWindows_sendTransactionConfirmation'].events({
     /**
-    Gets the new provided gas in ether amount and calculates the resulting providedGas
+    Gets the new provided gas in expanse amount and calculates the resulting providedGas
 
     @event change .provided-gas, input .provided-gas
     */

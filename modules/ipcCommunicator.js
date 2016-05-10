@@ -88,11 +88,11 @@ ipc.on('backendAction_importPresaleFile', function(e, path, pw) {
     var error = false;
 
     // start import process
-    var nodeProcess = spawn(getNodePath('geth'), ['wallet', 'import', path]);
+    var nodeProcess = spawn(getNodePath('gexp'), ['wallet', 'import', path]);
 
     nodeProcess.once('error',function(){
         error = true;
-        e.sender.send('uiAction_importedPresaleFile', 'Couldn\'t start the "geth wallet import <file.json>" process.');
+        e.sender.send('uiAction_importedPresaleFile', 'Couldn\'t start the "gexp wallet import <file.json>" process.');
     });
     nodeProcess.stdout.on('data', function(data) {
         var data = data.toString();

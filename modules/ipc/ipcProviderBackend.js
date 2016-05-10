@@ -1,5 +1,5 @@
 /**
-The IPC provider backend filter and tunnel all incoming request to the IPC geth bridge.
+The IPC provider backend filter and tunnel all incoming request to the IPC gexp bridge.
 
 @module ipcProviderBackend
 */

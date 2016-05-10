@@ -28,8 +28,8 @@ if [ -d "$FRAMEWORKS_PATH/Squirrel.framework/Versions/A" ]; then
   codesign --deep -fs "$APP_KEY" --entitlements child.plist "$FRAMEWORKS_PATH/Squirrel.framework/Versions/A"
 fi
 
-codesign --deep -fs "$APP_KEY" --entitlements nodes.plist "$FRAMEWORKS_PATH/node/eth/eth"
-codesign --deep -fs "$APP_KEY" --entitlements nodes.plist "$FRAMEWORKS_PATH/node/geth/geth"
+codesign --deep -fs "$APP_KEY" --entitlements nodes.plist "$FRAMEWORKS_PATH/node/exp/exp"
+codesign --deep -fs "$APP_KEY" --entitlements nodes.plist "$FRAMEWORKS_PATH/node/gexp/gexp"
 
 
 codesign -fs "$APP_KEY" --entitlements parent.plist "$APP_PATH"
