@@ -11,6 +11,7 @@ The browserBar template
 @constructor
 */
 
+
 Template['layout_browserBar'].onRendered(function(){
     var template = this;
 });
@@ -191,7 +192,7 @@ Template['layout_browserBar'].events({
     @event click form.url
     */
     'click form.url': function(e, template){
-        template.$('.url-input').focus();
+        template.$('.url-input').select();
     },
     /*
     Send the domain
@@ -200,8 +201,10 @@ Template['layout_browserBar'].events({
     */
     'submit': function(e, template){     
         var tabs = Tabs.find().fetch(),
-            url = Helpers.formatUrl(template.find('input').value);
+            url = Helpers.formatUrl(template.$('.url-input')[0].value);
 
+        // remove focus from url input
+        template.$('.url-input').blur();
 
         // look in tabs
         var foundTab = _.find(tabs, function(tab){
@@ -216,7 +219,6 @@ Template['layout_browserBar'].events({
             foundTab = foundTab._id;
         else
             foundTab = 'browser';
-
 
         // update current tab url
         Tabs.update(foundTab, {$set: {

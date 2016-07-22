@@ -7,9 +7,14 @@ var packager = require('electron-packager');
 var spawn = require('child_process').spawn;
 var merge = require('merge-stream');
 var rename = require("gulp-rename");
+var download = require('gulp-download-stream');
+var decompress = require('gulp-decompress');
+var tap = require("gulp-tap");
+const mocha = require('gulp-spawn-mocha');
+// const zip = require('gulp-zip');
 // var zip = require('gulp-zip');
 // var zip = require('gulp-jszip');
-var EasyZip = require('easy-zip').EasyZip;
+// var EasyZip = require('easy-zip').EasyZip;
 var minimist = require('minimist');
 var fs = require('fs');
 var rcedit = require('rcedit');
@@ -31,11 +36,20 @@ else
 
 // CONFIG
 var type = 'mist';
+
 var filenameLowercase = 'mist-expanse';
 var filenameUppercase = 'Mist-expanse';
-var applicationName = 'Mist-expanse'; 
+var applicationName = 'Mist-expanse';
+var electronVersion = '1.2.5';
+var gethVersion = '1.4.7';
+var nodeUrls = {
+    'darwin-x64': 'https://github.com/expanse-project/go-expanse/releases/download/v1.4.7/gexp-darwin-10.6-amd64',
+    'linux-x64': 'https://github.com/expanse-project/go-expanse/releases/download/v1.4.7/gexp-linux-amd64',
+    'win32-x64': 'https://github.com/expanse-project/go-expanse/releases/download/v1.4.7/gexp-windows-4.0-amd64.exe',
+    'linux-ia32': 'https://github.com/expanse-project/go-expanse/releases/download/v1.4.7/gexp-linux-386',
+    'win32-ia32': 'https://github.com/expanse-project/go-expanse/releases/download/v1.4.7/gexp-windows-4.0-386.exe'
+};
 
-var electronVersion = '0.37.2';
 var osVersions = [];
 var packJson = require('./package.json');
 var version = packJson.version;
@@ -69,7 +83,6 @@ if(_.contains(options.platform, 'all')) {
         'win32-x64'
     ];
 }
-console.log('Bundling platforms: ', osVersions);
 
 
 // Helpers
@@ -113,7 +126,108 @@ gulp.task('clean:dist', function (cb) {
   ], cb);
 });
 
-gulp.task('copy-files', ['clean:dist'], function() {
+// DOWNLOAD NODES
+
+gulp.task('clean:nodes', function (cb) {
+  return del([
+    './nodes/geth/',
+  ], cb);
+});
+
+gulp.task('downloadNodes', ['clean:nodes'], function(done) {
+    var streams = [];
+
+    _.each(nodeUrls, function(nodeUrl, os){
+
+        //var destPath = (os === 'darwin-x64')
+          //  ? path +'/'+ filenameUppercase +'.app/Contents/Frameworks/node'
+            //: path +'/resources/node';
+
+
+        // donwload nodes
+        streams.push(download(nodeUrl)
+            .pipe(gulp.dest('./nodes/geth/')));
+
+    });
+
+    return merge.apply(null, streams);
+});
+
+gulp.task('unzipNodes', ['downloadNodes'], function(done) {
+    var streams = [];
+
+    _.each(nodeUrls, function(nodeUrl, os){
+
+        var fileName = nodeUrl.substr(nodeUrl.lastIndexOf('/'));
+
+        // unzip nodes
+        streams.push(gulp.src('./nodes/geth'+ fileName)
+            .pipe(decompress({strip: 1}))
+            .pipe(gulp.dest('./nodes/geth/'+ os)));
+
+    });
+
+    return merge.apply(null, streams);
+});
+
+gulp.task('renameNodes', ['unzipNodes'], function(done) {
+    var streams = [];
+
+    _.each(nodeUrls, function(nodeUrl, os){
+
+        var fileName = nodeUrl.substr(nodeUrl.lastIndexOf('/')).replace('download_file?file_path=','').replace('.tar.bz2','').replace('.zip','');
+
+        // unzip nodes
+        if(os === 'linux-ia32' || os === 'win32-ia32') {
+            console.log(fileName);
+            var task = gulp.src('./nodes/geth/'+ os + fileName);
+
+            if(os === 'linux-ia32')
+                task.pipe(rename('geth/'+ os + '/geth'));
+            if(os === 'win32-ia32')
+                task.pipe(rename('geth/'+ os + '/geth.exe'));
+
+            task.pipe(gulp.dest('./nodes/'));
+
+            streams.push(task);
+        }
+
+    });
+
+    return merge.apply(null, streams);
+});
+
+gulp.task('renameNodesDeleteOld', ['renameNodes'], function (cb) {
+  return del([
+    './nodes/geth/linux-ia32/'+ nodeUrls['linux-ia32'].substr(nodeUrls['linux-ia32'].lastIndexOf('/')).replace('download_file?file_path=','').replace('.tar.bz2','').replace('.zip',''),
+    './nodes/geth/win32-ia32/'+ nodeUrls['win32-ia32'].substr(nodeUrls['linux-ia32'].lastIndexOf('/')).replace('download_file?file_path=','').replace('.tar.bz2','').replace('.zip',''),
+  ], cb);
+});
+
+// CHECK FOR NODES
+
+var updatedNeeded = true;
+gulp.task('checkNodes', function() {
+    return gulp.src('./nodes/geth/*.{zip,tar.bz2}')
+    .pipe(tap(function(file, t) {
+        if(!!~file.path.indexOf('-'+ gethVersion +'-')) {
+            updatedNeeded = false;
+        }
+    }))
+    .pipe(gulp.dest('./nodes/geth/'));
+});
+
+
+// BUNLDE PROCESS
+
+gulp.task('copy-files', ['checkNodes', 'clean:dist'], function() {
+
+    // check if nodes are there
+    if(updatedNeeded){
+        console.error('YOUR NODES NEED TO BE UPDATED run $ gulp update-nodes');
+        throw new Error('YOUR NODES NEED TO BE UPDATED run $ gulp update-nodes');
+    }
+
     return gulp.src([
         './tests/**/*.*',
         './modules/**/*.*',
@@ -125,16 +239,19 @@ gulp.task('copy-files', ['clean:dist'], function() {
         '!./gexp',
         '!./gexp.exe',
         '!./main.js',
+
         '!./Wallet-README.txt'
         ], { base: './' })
         .pipe(gulp.dest('./dist_'+ type +'/app'));
 });
 
-gulp.task('switch-production', ['clean:dist'], function() {
-    return gulp.src(['./main.js'])
-        .pipe(replace('global.production = false;', 'global.production = true;'))
-        .pipe(replace('global.mode = (argv.mode ? argv.mode : \'mist\');', 'global.mode = (argv.mode ? argv.mode : \''+ type +'\');'))
-        .pipe(gulp.dest('./dist_'+ type +'/app'));
+gulp.task('switch-production', ['clean:dist', 'copy-files'], function(cb) {
+    fs.writeFileSync(__dirname+'/dist_'+ type +'/app/config.json', JSON.stringify({
+        production: true,
+        mode: type,
+    }));
+
+    cb();
 });
 
 
@@ -165,6 +282,7 @@ gulp.task('bundling-interface', ['clean:dist', 'copy-files'], function(cb) {
             console.log('Pulling https://github.com/expanse-org/meteor-dapp-wallet/tree/'+ options.walletSource +' "'+ options.walletSource +'" branch...');
             exec('cd interface/ && meteor-build-client ../dist_'+ type +'/app/interface/ -p "" &&'+
                  'cd ../dist_'+ type +'/ && git clone https://github.com/expanse-org/meteor-dapp-wallet.git && cd meteor-dapp-wallet/app && meteor-build-client ../../app/interface/wallet -p "" && cd ../../ && rm -rf meteor-dapp-wallet', function (err, stdout, stderr) {
+
                 console.log(stdout);
                 console.log(stderr);
 
@@ -185,6 +303,8 @@ gulp.task('copy-i18n', ['copy-files', 'bundling-interface'], function() {
 });
 
 gulp.task('create-binaries', ['copy-i18n'], function(cb) {
+    console.log('Bundling platforms: ', osVersions);
+
     packager({
         dir: './dist_'+ type +'/app/',
         out: './dist_'+ type +'/',
@@ -221,13 +341,13 @@ gulp.task('create-binaries', ['copy-i18n'], function(cb) {
     });
 });
 
+// FILE RENAMING
 
 gulp.task('change-files', ['create-binaries'], function() {
     var streams = [];
 
     osVersions.map(function(os){
-        var stream,
-            path = './dist_'+ type +'/'+ filenameUppercase +'-'+ os;
+        var path = './dist_'+ type +'/'+ filenameUppercase +'-'+ os;
 
         // change version file
         streams.push(gulp.src([
@@ -359,15 +479,11 @@ gulp.task('getChecksums', [], function(done) {
 
         var path = createNewFileName(os) + '.zip';
 
-        // spit out shasum and md5
+        // spit out sha256 checksums
         var fileName = path.replace('./dist_'+ type +'/', '');
-        var sha = spawn('shasum', [path]);
+        var sha = spawn('shasum', ['-a','256',path]);
         sha.stdout.on('data', function(data){
-            console.log('SHASUM '+ fileName +': '+ data.toString().replace(path, ''));
-        });
-        var md5 = spawn('md5', [path]);
-        md5.stdout.on('data', function(data){
-            console.log('MD5 '+ fileName +': '+ data.toString().replace('MD5 ('+ path +') = ', ''));
+            console.log('SHA256 '+ fileName +': '+ data.toString().replace(path, ''));
         });
 
 
@@ -389,10 +505,15 @@ gulp.task('taskQueue', [
     'create-binaries',
     'change-files',
     //'cleanup-files',
-    'rename-folders',
-    // 'zip'
+    'rename-folders'
+    // 'zip',
 ]);
 
+// DOWNLOAD nodes
+gulp.task('update-nodes', [
+    'renameNodesDeleteOld'
+]);
+gulp.task('download-nodes', ['update-nodes']);
 
 // MIST task
 gulp.task('mist', [
@@ -416,4 +537,20 @@ gulp.task('wallet-checksums', [
     'getChecksums'
 ]);
 
+
+
+gulp.task('test-wallet', function() {
+    return gulp.src([
+        './test/wallet/*.test.js'
+    ])
+    .pipe(mocha({
+        timeout: 60000,
+        ui: 'exports',
+        reporter: 'spec'
+    }));
+});
+
+
+
 gulp.task('default', ['mist']);
+

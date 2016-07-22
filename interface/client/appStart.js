@@ -7,7 +7,7 @@ if(location.hash)
 
 // set browser as default tab
 if(!LocalStore.get('selectedTab'))
-    LocalStore.set('selectedTab', 'browser');
+    LocalStore.set('selectedTab', 'wallet');
 
 /**
 The init function of Mist
@@ -15,25 +15,32 @@ The init function of Mist
 @method mistInit
 */
 mistInit = function(){
+    console.info('Initialise Mist');
+
+    if (0 <= location.search.indexOf('reset-tabs')) {
+        console.info('Resetting UI tabs');
+        
+        Tabs.remove({});
+    }
+
+    if(!Tabs.findOne('browser')) {
+        console.debug('Insert tabs');
+
+        Tabs.insert({
+            _id: 'browser',
+            url: 'https://ethereum.org',
+            position: 0
+        });
+    }
 
 
-    Meteor.setTimeout(function() {
-        if(!Tabs.findOne('browser')) {
-            Tabs.insert({
-                _id: 'browser',
-                url: 'about:blank',
-                position: 0
-            });
-            
-            Tabs.insert({
-                url: 'http://expanse-dapp-wallet.meteor.com',
-                position: 1,
-                permissions: {
-                    accounts: web3.eth.accounts
-                }
-            });
+    Tabs.upsert({_id: 'wallet'}, {
+        url: 'http://expanse-dapp-wallet.meteor.com',
+        position: 1,
+        permissions: {
+            admin: true
         }
-    }, 1500);
+    });
 
     EthAccounts.init();
     EthBlocks.init();
@@ -41,6 +48,8 @@ mistInit = function(){
 
 
 Meteor.startup(function(){
+    console.info('Meteor starting up...');
+
     // check that it is not syncing before
     web3.eth.getSyncing(function(e, sync) {
         if(e || !sync)
@@ -48,9 +57,10 @@ Meteor.startup(function(){
     });
 
 
+    console.debug('Setting language');
 
     // SET default language
-    if(Cookie.get('TAPi18next')) {
+    if(Cookie.get('TAPi18next')) {        
         TAPi18n.setLanguage(Cookie.get('TAPi18next'));
     } else {
         var userLang = navigator.language || navigator.userLanguage,

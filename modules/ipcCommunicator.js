@@ -4,13 +4,17 @@ Window communication
 @module ipcCommunicator
 */
 
-const app = require('app');  // Module to control application life.
-const appMenu = require('./menuItems');   
-const popupWindow = require('./popupWindow.js');
-const log = require('./utils/logger').create('ipcCommunicator');
-const ipc = require('electron').ipcMain;
+const electron = require('electron');
+
+const app = electron.app;  // Module to control application life.
+const appMenu = require('./menuItems');
+const logger = require('./utils/logger');
+const Windows = require('./windows');
+const ipc = electron.ipcMain;
 
 const _ = global._;
+
+const log = logger.create('ipcCommunicator');
 
 /*
 
@@ -36,18 +40,17 @@ ipc.on('backendAction_closeApp', function() {
 });
 ipc.on('backendAction_closePopupWindow', function(e) {
     var windowId = e.sender.getId(),
-        senderWindow = global.windows[windowId];
+        senderWindow = Windows.getById(windowId);
 
-    if(senderWindow) {
-        senderWindow.window.close();
-        delete global.windows[windowId];
+    if (senderWindow) {
+        senderWindow.close();
     }
 });
 ipc.on('backendAction_setWindowSize', function(e, width, height) {
     var windowId = e.sender.getId(),
-        senderWindow = global.windows[windowId];
+        senderWindow = Windows.getById(windowId);
 
-    if(senderWindow) {
+    if (senderWindow) {
         senderWindow.window.setSize(width, height);
         senderWindow.window.center(); // ?
     }
@@ -55,15 +58,19 @@ ipc.on('backendAction_setWindowSize', function(e, width, height) {
 
 ipc.on('backendAction_sendToOwner', function(e, error, value) {
     var windowId = e.sender.getId(),
-        senderWindow = global.windows[windowId];
+        senderWindow = Windows.getById(windowId);
 
-    var mainWindow = global.mainWindow;
+    var mainWindow = Windows.getByType('main');
 
-    if (_.get(senderWindow, 'owner')) {
-        senderWindow.owner.send('windowMessage', senderWindow.type, error, value);
+    if (senderWindow.ownerId) {
+        let ownerWindow = Windows.getById(senderWindow.ownerId);
 
-        if(mainWindow && mainWindow.webContents && !mainWindow.webContents.isDestroyed()) {
-            mainWindow.webContents.send('mistUI_windowMessage', senderWindow.type, senderWindow.owner.getId(), error, value);
+        if (ownerWindow) {
+            ownerWindow.send('windowMessage', senderWindow.type, error, value);            
+        }
+
+        if (mainWindow) {
+            mainWindow.send('mistUI_windowMessage', senderWindow.type, senderWindow.ownerId, error, value);
         }
     }
 
@@ -71,7 +78,7 @@ ipc.on('backendAction_sendToOwner', function(e, error, value) {
 
 ipc.on('backendAction_setLanguage', function(e, lang){
     if(global.language !== lang) {
-        global.i18n.changeLanguage(lang.substr(0,2), function(err, t){
+        global.i18n.changeLanguage(lang.substr(0,5), function(err, t){
             if(!err) {
                 global.language = global.i18n.language;
                 log.info('Backend language set to: ', global.language);
@@ -109,7 +116,7 @@ ipc.on('backendAction_importPresaleFile', function(e, path, pw) {
                 e.sender.send('uiAction_importedPresaleFile', null, '0x'+ find[1]);
             else
                 e.sender.send('uiAction_importedPresaleFile', data);
-        
+
         // if not stop, so we don't kill the process
         } else {
             return;
@@ -134,5 +141,34 @@ ipc.on('backendAction_importPresaleFile', function(e, path, pw) {
 
 // MIST API
 ipc.on('mistAPI_requestAccount', function(e){
-    popupWindow.show('requestAccount', {width: 400, height: 230, alwaysOnTop: true}, null, e);
+    Windows.createPopup('requestAccount', {
+        ownerId: e.sender.getId(),
+        electronOptions: {
+            width: 400, 
+            height: 230, 
+            alwaysOnTop: true,
+        },
+    });
 });
+
+
+
+const uiLoggers = {};
+
+ipc.on('console_log', function(event, id, logLevel, logItemsStr) {
+    try {
+        let loggerId = `(ui: ${id})`;
+
+        let windowLogger = uiLoggers[loggerId];
+
+        if (!windowLogger) {
+            windowLogger = uiLoggers[loggerId] = logger.create(loggerId);
+        }
+
+        windowLogger[logLevel].apply(windowLogger, _.toArray(JSON.parse(logItemsStr)));
+    } catch (err) {
+        log.error(err);
+    }
+});
+
+
