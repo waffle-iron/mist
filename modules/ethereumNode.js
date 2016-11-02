@@ -11,13 +11,12 @@ const logRotate = require('log-rotate');
 const dialog = electron.dialog;
 const fs = require('fs');
 const Q = require('bluebird');
-const getNodePath = require('./getNodePath.js');
 const EventEmitter = require('events').EventEmitter;
-const getIpcPath = require('./ipc/getIpcPath.js')
 const Sockets = require('./sockets');
+const ClientBinaryManager = require('./clientBinaryManager');
 const Settings = require('./settings');
 
-const DEFAULT_NODE_TYPE = 'geth';
+const DEFAULT_NODE_TYPE = 'gexp';
 const DEFAULT_NETWORK = 'main';
 
 
@@ -42,7 +41,7 @@ class EthereumNode extends EventEmitter {
         this._type = null;
         this._network = null;
 
-        this._socket = Sockets.get('node-ipc', Sockets.TYPES.WEB3_IPC);
+        this._socket = Sockets.get('node-ipc', Settings.rpcMode);
 
         this.on('data', _.bind(this._logNodeData, this));
     }
@@ -68,11 +67,11 @@ class EthereumNode extends EventEmitter {
     }
 
     get isEth () {
-        return this._type === 'eth';
+        return this._type === 'exp';
     }
 
     get isGeth () {
-        return this._type === 'geth';
+        return this._type === 'gexp';
     }
 
     get isMainNetwork () {
@@ -123,15 +122,7 @@ class EthereumNode extends EventEmitter {
      * @return {Promise}
      */
     init () {
-
-
-        const ipcPath = getIpcPath();
-
-        // TODO: if connection to external node is successful then query it to
-        // determine node and network type
-
-        // check if the node is already running
-        return this._socket.connect({path: ipcPath})
+        return this._socket.connect(Settings.rpcConnectConfig)
             .then(()=> {
                 this.state = STATES.CONNECTED;
 
@@ -185,7 +176,7 @@ class EthereumNode extends EventEmitter {
 
     /**
      * Stop node.
-     * 
+     *
      * @return {Promise}
      */
     stop () {
@@ -204,7 +195,7 @@ class EthereumNode extends EventEmitter {
                 this._node.stdin.removeAllListeners('error');
                 this._node.removeAllListeners('error');
                 this._node.removeAllListeners('exit');
-                
+
                 this._node.kill('SIGINT');
 
                 // after some time just kill it if not already done so
@@ -220,7 +211,7 @@ class EthereumNode extends EventEmitter {
                     this._node = null;
 
                     resolve();
-                }); 
+                });
             })
                 .then(() => {
                     this.state = STATES.STOPPED;
@@ -235,12 +226,12 @@ class EthereumNode extends EventEmitter {
 
 
     getLog () {
-        return this._loadUserData('node.log');
+        return Settings.loadUserData('node.log');
     }
 
 
 
-    /** 
+    /**
      * Send Web3 command to socket.
      * @param  {String} method Method name
      * @param  {Array} [params] Method arguments
@@ -248,7 +239,7 @@ class EthereumNode extends EventEmitter {
      */
     send (method, params) {
         return this._socket.send({
-            method: method, 
+            method: method,
             params: params
         });
     }
@@ -257,13 +248,11 @@ class EthereumNode extends EventEmitter {
 
     /**
      * Start an ethereum node.
-     * @param  {String} nodeType geth, eth, etc
+     * @param  {String} nodeType gexp, exp, etc
      * @param  {String} network  network id
      * @return {Promise}
      */
     _start (nodeType, network) {
-        const ipcPath = getIpcPath();
-
         log.info(`Start node: ${nodeType} ${network}`);
 
         const isTestNet = ('test' === network);
@@ -289,12 +278,12 @@ class EthereumNode extends EventEmitter {
                 this._node = proc;
                 this.state = STATES.STARTED;
 
-                this._saveUserData('node', this._type);
-                this._saveUserData('network', this._network);
+                Settings.saveUserData('node', this._type);
+                Settings.saveUserData('network', this._network);
 
-                return this._socket.connect({ path: ipcPath }, {
+                return this._socket.connect(Settings.rpcConnectConfig, {
                         timeout: 30000 /* 30s */
-                    })  
+                    })
                     .then(() => {
                         this.state = STATES.CONNECTED;
                     })
@@ -313,12 +302,12 @@ class EthereumNode extends EventEmitter {
             .catch((err) => {
                 // set before updating state so that state change event observers
                 // can pick up on this
-                this.lastError = err.tag; 
+                this.lastError = err.tag;
                 this.state = STATES.ERROR;
 
-                // if unable to start eth node then write geth to defaults
-                if ('eth' === nodeType) {
-                    this._saveUserData('node', 'geth');
+                // if unable to start Gexp node then write gexp to defaults
+                if ('exp' === nodeType) {
+                    Settings.saveUserData('node', 'gexp');
                 }
 
                 throw err;
@@ -335,7 +324,7 @@ class EthereumNode extends EventEmitter {
         this._network = network;
         this._type = nodeType;
 
-        const binPath = getNodePath(nodeType);
+        const binPath = ClientBinaryManager.getClient(nodeType).binPath;
 
         log.debug(`Start node using ${binPath}`);
 
@@ -354,7 +343,7 @@ class EthereumNode extends EventEmitter {
             log.trace('Rotate log file');
 
             // rotate the log file
-            logRotate(this._buildFilePath('node.log'), {count: 5}, (err) => {
+            logRotate(Settings.constructUserDataPath('node.log'), {count: 5}, (err) => {
                 if (err) {
                     log.error('Log rotation problems', err);
 
@@ -365,17 +354,17 @@ class EthereumNode extends EventEmitter {
 
                 // START TESTNET
                 if ('test' == network) {
-                    args = (nodeType === 'geth') 
-                        ? ['--testnet', '--fast', '--ipcpath', getIpcPath()] 
+                    args = (nodeType === 'gexp')
+                        ? ['--testnet', '--fast', '--ipcpath', Settings.rpcIpcPath]
                         : ['--morden', '--unsafe-transactions'];
-                } 
+                }
                 // START MAINNET
                 else {
-                    args = (nodeType === 'geth') 
-                        ? ['--fast', '--cache', '512'] 
-                        : ['--unsafe-transactions'];
+                    args = (nodeType === 'gexp')
 
-                   }
+                        ? ['--fast', '--cache', '512', '--oppose-dao-fork'] // FORK RELATED
+                        : ['--unsafe-transactions', '--oppose-dao-fork'];
+                }
 
                 let nodeOptions = Settings.nodeOptions;
 
@@ -393,7 +382,7 @@ class EthereumNode extends EventEmitter {
                 proc.once('error', (err) => {
                     if (STATES.STARTING === this.state) {
                         this.state = STATES.ERROR;
-                        
+
                         log.info('Node startup error');
 
                         // TODO: detect this properly
@@ -405,7 +394,7 @@ class EthereumNode extends EventEmitter {
 
                 // we need to read the buff to prevent node from not working
                 proc.stderr.pipe(
-                    fs.createWriteStream(this._buildFilePath('node.log'), { flags: 'a' })
+                    fs.createWriteStream(Settings.constructUserDataPath('node.log'), { flags: 'a' })
                 );
 
                 // when proc outputs data
@@ -418,9 +407,9 @@ class EthereumNode extends EventEmitter {
                     if (STATES.STARTING === this.state) {
                         let dataStr = data.toString().toLowerCase();
 
-                        if ('geth' === nodeType) {
+                        if ('gexp' === nodeType) {
                             if (0 <= dataStr.indexOf('fatal: error')) {
-                                let err = new Error(`Geth error: ${dataStr}`);
+                                let err = new Error(`Gexp error: ${dataStr}`);
 
                                 if (0 <= dataStr.indexOf('bind')) {
                                     err.tag = UNABLE_TO_BIND_PORT_ERROR;
@@ -447,15 +436,15 @@ class EthereumNode extends EventEmitter {
                 // when data is first received
                 this.once('data', () => {
                     /*
-                        We wait a short while before marking startup as successful 
-                        because we may want to parse the initial node output for 
-                        errors, etc (see geth port-binding error above)
+                        We wait a short while before marking startup as successful
+                        because we may want to parse the initial node output for
+                        errors, etc (see gexp port-binding error above)
                     */
                     setTimeout(() => {
                         if (STATES.STARTING === this.state) {
                             log.info(`${NODE_START_WAIT_MS}ms elapsed, assuming node started up successfully`);
 
-                            resolve(proc);                        
+                            resolve(proc);
                         }
                     }, NODE_START_WAIT_MS);
                 })
@@ -501,48 +490,12 @@ class EthereumNode extends EventEmitter {
     }
 
 
-
     _loadDefaults () {
         log.trace('Load defaults');
 
-        this.defaultNodeType = Settings.nodeType || this._loadUserData('node') || DEFAULT_NODE_TYPE;
-        this.defaultNetwork = Settings.network || this._loadUserData('network') || DEFAULT_NETWORK;
-
+        this.defaultNodeType = Settings.nodeType || Settings.loadUserData('node') || DEFAULT_NODE_TYPE;
+        this.defaultNetwork = Settings.network || Settings.loadUserData('network') || DEFAULT_NETWORK;
     }
-
-
-    _loadUserData (path) {
-        const fullPath = this._buildFilePath(path);
-
-        log.trace('Load user data', fullPath);
-
-        try {
-            return fs.readFileSync(fullPath, {encoding: 'utf8'});
-        } catch (err){
-            log.error(`Unable to read from ${fullPath}`, err);
-        }
-
-        return null;
-    }
-
-
-    _saveUserData (path, data) {
-        if(!data) return; // return so we dont write null, or other invalid data
-
-        const fullPath = this._buildFilePath(path);
-
-        try {
-            fs.writeFileSync(fullPath, data, {encoding: 'utf8'});
-        } catch (err){
-            log.error(`Unable to write to ${fullPath}`, err);
-        }
-    }
-
-
-    _buildFilePath (path) {
-        return Settings.userDataPath + '/' + path;   
-    }
-
 }
 
 
@@ -564,4 +517,3 @@ EthereumNode.STARTING = 0;
 
 
 module.exports = new EthereumNode();
-

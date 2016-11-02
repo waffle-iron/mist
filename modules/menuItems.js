@@ -9,9 +9,21 @@ const ipc = electron.ipcMain;
 const ethereumNode = require('./ethereumNode.js');
 const Windows = require('./windows');
 const updateChecker = require('./updateChecker');
+const ClientBinaryManager = require('./clientBinaryManager');
 const Settings = require('./settings');
 const fs = require('fs');
 const dialog = electron.dialog;
+
+
+// Make easier to return values for specific systems
+var switchForSystem = function(options){
+    if (process.platform in options) {
+        return options[process.platform];
+    }
+    else if ('default' in options) {
+        return options['default'];
+    }
+};
 
 
 // create menu
@@ -49,9 +61,10 @@ var menuTempl = function(webviews) {
     webviews = webviews || [];
 
     // APP
-    menu.push({
-        label: i18n.t('mist.applicationMenu.app.label', {app: Settings.appName}),
-        submenu: [
+    var fileMenu = [];
+
+    if(process.platform === 'darwin') {
+        fileMenu.push(
             {
                 label: i18n.t('mist.applicationMenu.app.about', {app: Settings.appName}),
                 click: function(){
@@ -96,15 +109,19 @@ var menuTempl = function(webviews) {
             },
             {
                 type: 'separator'
-            },
-            {
-                label: i18n.t('mist.applicationMenu.app.quit', {app: Settings.appName}),
-                accelerator: 'CommandOrControl+Q',
-                click: function(){
-                    app.quit();
-                }
             }
-        ]
+        );
+    }
+    fileMenu.push(
+        {label: i18n.t('mist.applicationMenu.app.quit', {app: Settings.appName}),
+            accelerator: 'CommandOrControl+Q',
+            click: function(){
+                app.quit();
+            }
+        });
+    menu.push({
+        label: i18n.t('mist.applicationMenu.app.label', {app: Settings.appName}),
+        submenu: fileMenu
     });
 
     // ACCOUNTS
@@ -145,7 +162,7 @@ var menuTempl = function(webviews) {
                         click: function(){
                             var path = Settings.userHomePath;
 
-                            // eth
+                            // exp
                             if(ethereumNode.isEth) {
                                 if(process.platform === 'win32')
                                     path = Settings.appDataPath + '\\Web3\\keys';
@@ -225,6 +242,7 @@ var menuTempl = function(webviews) {
         );
         ipc.emit("backendAction_setLanguage", {}, lang_code);
     }
+    let currentLanguage = i18n.getBestMatchedLangCode(global.language);
 
     let languageMenu =
     Object.keys(i18n.options.resources)
@@ -233,12 +251,12 @@ var menuTempl = function(webviews) {
         menuItem = {
             label: i18n.t('mist.applicationMenu.view.langCodes.' + lang_code),
             type: 'checkbox',
-            checked: (global.language.substr(0,2) === lang_code),
+            checked: (currentLanguage === lang_code),
             click: genSwitchLanguageFunc(lang_code)
         }
         return menuItem
     });
-    let defaultLang = app.getLocale().substr(0,2);    
+    let defaultLang = i18n.getBestMatchedLangCode(app.getLocale());
     languageMenu.unshift({
         label:  i18n.t('mist.applicationMenu.view.default'),
         click: genSwitchLanguageFunc(defaultLang)
@@ -252,7 +270,10 @@ var menuTempl = function(webviews) {
         submenu: [
             {
                 label: i18n.t('mist.applicationMenu.view.fullscreen'),
-                accelerator: 'CommandOrControl+F',
+                accelerator: switchForSystem({
+                    'darwin': 'Command+Control+F',
+                    'default': 'F11'
+                }),
                 click: function(){
                     let mainWindow = Windows.getByType('main');
 
@@ -288,7 +309,7 @@ var menuTempl = function(webviews) {
             devtToolsSubMenu.push({
                 label: i18n.t('mist.applicationMenu.develop.devToolsWebview', {webview: webview.name}),
                 click: function() {
-                    Windows.getByType('main').send('toggleWebviewDevTool', webview._id);
+                    Windows.getByType('main').send('uiAction_toggleWebviewDevTool', webview._id);
                 }
             });
         });
@@ -305,6 +326,7 @@ var menuTempl = function(webviews) {
         }];
     }
 
+    var externalNodeMsg = (ethereumNode.isOwnNode)? '' : ' (' + i18n.t('mist.applicationMenu.develop.externalNode') + ')';
     devToolsMenu = [{
             label: i18n.t('mist.applicationMenu.develop.devTools'),
             submenu: devtToolsSubMenu
@@ -312,27 +334,18 @@ var menuTempl = function(webviews) {
             label: i18n.t('mist.applicationMenu.develop.runTests'),
             enabled: (Settings.uiMode === 'mist'),
             click: function(){
-                Windows.getByType('main').send('runTests', 'webview');
+                Windows.getByType('main').send('uiAction_runTests', 'webview');
             }
         },{
-            label: i18n.t('mist.applicationMenu.develop.logFiles'),
+            label: i18n.t('mist.applicationMenu.develop.logFiles') + externalNodeMsg,
+            enabled: ethereumNode.isOwnNode,
             click: function(){
-                var log = '';
                 try {
-                    log = fs.readFileSync(Settings.userDataPath + '/node.log', {encoding: 'utf8'});
-                    log = '...'+ log.slice(-1000);
+                    shell.showItemInFolder(Settings.userDataPath + '/node.log');
                 } catch(e){
                     log.info(e);
                     log = 'Couldn\'t load log file.';
                 };
-
-                dialog.showMessageBox({
-                    type: "info",
-                    buttons: ['OK'],
-                    message: 'Node log file',
-                    detail: log
-                }, function(){
-                });
             }
         }
     ];
@@ -347,29 +360,44 @@ var menuTempl = function(webviews) {
     });
     // add node switch
     if(process.platform === 'darwin' || process.platform === 'win32') {
+        const nodeSubmenu = [];
+
+        const ethClient = ClientBinaryManager.getClient('exp'),
+            gethClient = ClientBinaryManager.getClient('gexp');
+
+        if (gethClient) {
+            nodeSubmenu.push(
+                {
+                  label: `Gexp ${gethClient.version} (Go)`,
+                  checked: ethereumNode.isOwnNode && ethereumNode.isGeth,
+                  enabled: ethereumNode.isOwnNode,
+                  type: 'checkbox',
+                  click: function(){
+                      restartNode('gexp');
+                  }
+                }
+            );
+        }
+
+        if (ethClient) {
+            nodeSubmenu.push(
+                {
+                    label: `Exp ${ethClient.version} (C++)`,
+                    checked: ethereumNode.isOwnNode && ethereumNode.isEth,
+                    enabled: ethereumNode.isOwnNode,
+                    // enabled: false,
+                    type: 'checkbox',
+                    click: function(){
+                        restartNode('exp');
+                    }
+                }
+            );
+        }
+
         devToolsMenu.push({
             label: i18n.t('mist.applicationMenu.develop.ethereumNode'),
-            submenu: [
-              {
-                label: 'Gexp 1.4.7 (Go)',
-                checked: ethereumNode.isOwnNode && ethereumNode.isGeth,
-                enabled: ethereumNode.isOwnNode,
-                type: 'checkbox',
-                click: function(){
-                    restartNode('gexp');
-                }
-              },
-              {
-                label: 'Exp 1.2.9 (C++) [no hardfork support!]',
-                /*checked: ethereumNode.isOwnNode && ethereumNode.isEth,
-                enabled: ethereumNode.isOwnNode,*/
-                enabled: false,
-                type: 'checkbox',
-                click: function(){
-                    restartNode('exp');
-                }
-              }
-        ]});
+            submenu: nodeSubmenu
+        });
     }
 
     // add network switch
@@ -467,19 +495,43 @@ var menuTempl = function(webviews) {
     })
 
     // HELP
-    if(process.platform === 'darwin') {
-        menu.push({
-            label: i18n.t('mist.applicationMenu.help.label'),
-            role: 'help',
-            submenu: [{
-                label: 'Report a bug on Github',
-                click: function(){
-                    shell.openExternal('https://github.com/expanse-org/mist/issues');
-                }
-            }]
-        });
-    }
+    var helpMenu = [];
 
+    if (process.platform === 'freebsd' || process.platform === 'linux' ||
+            process.platform === 'sunos' || process.platform === 'win32') {
+        helpMenu.push(
+            {
+                label: i18n.t('mist.applicationMenu.app.about', {app: Settings.appName}),
+                click: function(){
+                    Windows.createPopup('about', {
+                        electronOptions: {
+                            width: 420,
+                            height: 230,
+                            alwaysOnTop: true,
+                        }
+                    });
+                }
+            },
+            {
+                label: i18n.t('mist.applicationMenu.app.checkForUpdates'),
+                click: function() {
+                    updateChecker.runVisibly();
+                }
+            }
+        );
+    }
+    helpMenu.push({
+        label: i18n.t('mist.applicationMenu.help.reportBug'),
+        click: function(){
+            shell.openExternal('https://github.com/ethereum/mist/issues');
+        }
+    });
+
+    menu.push({
+        label: i18n.t('mist.applicationMenu.help.label'),
+        role: 'help',
+        submenu: helpMenu
+    });
     return menu;
 };
 

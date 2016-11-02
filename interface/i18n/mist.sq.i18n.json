@@ -56,7 +56,7 @@
             "nodeStartup": "Duket se nyja nuk mund të krijohet. Mos keni ndonje qe është aktive? Mos është duke pasuruar bazën e të dhënave në këto momente?",
             "timeSync": {
                 "title": "Ora e kompjuterit tuaj nuk është e sinkronizuar.",
-                "description": "Në mënyrë që të sinkronizoheni me sukses me rrjetin e Ethereum-it ju duhet të sinkronizoni orën tuaj të kompjuterit me një server sinkronizues kohe.",
+                "description": "Në mënyrë që të sinkronizoheni me sukses me rrjetin e Expanse-it ju duhet të sinkronizoni orën tuaj të kompjuterit me një server sinkronizues kohe.",
                 "win32": "Shkoni në \"Internet Time Settings\" tek preferencat tuaja të sistemit dhe përzgjidhni opcionin përkatës. Për detaje shikoni këtë udhëzues: http://www.guidingtech.com/3119/windows-clock-sync/",
                 "linux": "Që të fusni në punë një server kohe të sinkronizuar instaloni \"ntp\" nëpërmjet \"apt-get install ntp\".",
                 "darwin": "Që të mundësoni një sinkronizim kohe,  hapni preferencat e kohes dhe përzgjidhni \"Set the time and date automatically\"."
@@ -89,8 +89,8 @@
             "runningNodeFound": "U gjet nyje Ethereumi në punë!",
             "startingNode": "Duke krijuar nyje Ethereumi...",
             "startedNode": "Duke filluar aplikacionin...",
-            "nodeConnectionTimeout": "Nuk mundi të fillojë krijimin e një nyje Ethereumi!<br><small>Nëse ju <a href='https://www.ethereum.org/cli#geth' class='button' target='_blank'>installed Geth</a>, përdorni këtë komandë ta krijoni atë: <br> <code>geth --ipcpath __path__</code></small><br> <small><a href='https://github.com/ethereum/mist/issues' class='button' target='_blank'> Ose raportoni një problem </a></small>",
-            "nodeBinaryNotFound": "Nuk u gjet nyje binare Ethereumi!<br><small> <a href='https://www.ethereum.org/cli#geth' class='button' target='_blank'> Lutemi krijoni një manualisht më parë. </a> </small>",
+            "nodeConnectionTimeout": "Nuk mundi të fillojë krijimin e një nyje Ethereumi!<br><small>Nëse ju <a href='https://www.ethereum.org/cli#gexp' class='button' target='_blank'>installed Gexp</a>, përdorni këtë komandë ta krijoni atë: <br> <code>gexp --ipcpath __path__</code></small><br> <small><a href='https://github.com/ethereum/mist/issues' class='button' target='_blank'> Ose raportoni një problem </a></small>",
+            "nodeBinaryNotFound": "Nuk u gjet nyje binare Ethereumi!<br><small> <a href='https://www.ethereum.org/cli#gexp' class='button' target='_blank'> Lutemi krijoni një manualisht më parë. </a> </small>",
             "nodeSyncing": "Nyja e Ethereumit ka nevojë të sinkronizohet, lutemi prisni...",
             "nodeSyncInfo": "Duke marrë bllokun __currentBlock__ of __highestBlock__.",
             "nodeSyncConnecting": "Duke kërkuar të barabartë...",
@@ -141,7 +141,7 @@
                 }
             },
             "onboarding": {
-                "description" : "Ethereum është një platformë e decentralizuar për ndërtim aplikacionesh në një zinxhir blloqesh (blockchain): tamper-proof software i cili mund të transferojë vlerë dhe pronësi dhe jetë përgjithmonë",
+                "description" : "Expanse është një platformë e decentralizuar për ndërtim aplikacionesh në një zinxhir blloqesh (blockchain): tamper-proof software i cili mund të transferojë vlerë dhe pronësi dhe jetë përgjithmonë",
                 "goToTestnet" : "Përdor rrjetit testues",
                 "goToTestnetDescription" : "Testo lirshëm teknologjinë në një testrrjet pa përdorur ether të vërtetë.",
                 "gotoMainnet" : "Përdor rrjetin kryesor",
@@ -157,7 +157,7 @@
                 "protectDescription" : "Choose a password for your new account. Make it as strong as if it would protect your house keys!",
                 "accountTitle" : "Load it up!",
                 "accountTitleTestnet" : "Mine some!",
-                "etherDescription": "The ethereum network is based on token called “Ether”. You’ll need a small amount of it to do anything on the Ethereum network.",
+                "etherDescription": "The ethereum network is based on token called “Ether”. You’ll need a small amount of it to do anything on the Expanse network.",
                 "loadItDescription" : "If you already own Bitcoin, or any other cryptocurrency, you can easily convert it to ether using shapeshift. <br><br> We recommend loading somewhere between <strong>0.25 to 1 ether</strong>.",
                 "mineItDescription": "<strong>On the testnet you can mine ether yourself by going to the <em>Develop</em> menu and choosing <em>Start Mining</em>. </strong> <br> <strong> DO NOT ATTEMPT TO SEND REAL ETHER TO THIS ADDRESS </strong>",
                 "you" : "YOU",

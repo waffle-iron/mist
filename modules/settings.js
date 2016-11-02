@@ -1,4 +1,6 @@
+const path = require('path');
 const electron = require('electron');
+const fs = require('fs');
 const app = electron.app;
 
 const logger = require('./utils/logger');
@@ -17,10 +19,8 @@ try {
 
 
 
-
-
 const argv = require('yargs')
-    .usage('Usage: $0 [Mist options] -- [Node options]')
+    .usage('Usage: $0 [Mist options] [Node options]')
     .option({
         mode: {
             alias: 'm',
@@ -35,7 +35,7 @@ const argv = require('yargs')
         node: {
             demand: false,
             default: null,
-            describe: 'Node to use: geth, eth',
+            describe: 'Node to use: gexp, exp',
             requiresArg: true,
             nargs: 1,
             type: 'string',
@@ -50,9 +50,9 @@ const argv = require('yargs')
             type: 'string',
             group: 'Mist options:',
         },
-        ipcpath: {
+        rpc: {
             demand: false,
-            describe: 'Path to node IPC socket file (this will automatically get passed as an option to Geth).',
+            describe: 'Path to node IPC socket file OR HTTP RPC hostport (if IPC socket file then --node-ipcpath will be set with this value).',
             requiresArg: true,
             nargs: 1,
             type: 'string',
@@ -60,7 +60,7 @@ const argv = require('yargs')
         },
         gethpath: {
             demand: false,
-            describe: 'Path to Geth executable to use instead of default.',
+            describe: 'Path to Gexp executable to use instead of default.',
             requiresArg: true,
             nargs: 1,
             type: 'string',
@@ -68,7 +68,7 @@ const argv = require('yargs')
         },
         ethpath: {
             demand: false,
-            describe: 'Path to Eth executable to use instead of default.',
+            describe: 'Path to Exp executable to use instead of default.',
             requiresArg: true,
             nargs: 1,
             type: 'string',
@@ -88,7 +88,7 @@ const argv = require('yargs')
             requiresArg: false,
             nargs: 0,
             type: 'boolean',
-            group: 'Mist options:',            
+            group: 'Mist options:',
         },
         logfile: {
             demand: false,
@@ -96,7 +96,7 @@ const argv = require('yargs')
             requiresArg: true,
             nargs: 1,
             type: 'string',
-            group: 'Mist options:',            
+            group: 'Mist options:',
         },
         loglevel: {
             demand: false,
@@ -105,7 +105,7 @@ const argv = require('yargs')
             requiresArg: true,
             nargs: 1,
             type: 'string',
-            group: 'Mist options:',                        
+            group: 'Mist options:',
         },
         version: {
             alias: 'v',
@@ -117,7 +117,7 @@ const argv = require('yargs')
             type: 'boolean',
         },
         '': {
-            describe: 'All options will be passed onto the node (e.g. Geth).',
+            describe: 'To pass options to the underlying node (e.g. Gexp) use the --node- prefix, e.g. --node-datadir',
             group: 'Node options:',
         }
     })
@@ -132,7 +132,10 @@ argv.nodeOptions = [];
 for (let optIdx in argv) {
     if (0 === optIdx.indexOf('node-')) {
         argv.nodeOptions.push('--' + optIdx.substr(5));
-        argv.nodeOptions.push(argv[optIdx]);
+
+        if (true !== argv[optIdx]) {
+            argv.nodeOptions.push(argv[optIdx]);
+        }
 
         break;
     }
@@ -152,7 +155,7 @@ class Settings {
   init () {
     logger.setup(argv);
 
-    this._log = logger.create('Settings');    
+    this._log = logger.create('Settings');
   }
 
   get userDataPath() {
@@ -205,8 +208,48 @@ class Settings {
     return argv.ethpath;
   }
 
-  get ipcPath () {
-    return argv.ipcpath;
+  get rpcMode () {
+    return (argv.rpc && 0 > argv.rpc.indexOf('.ipc')) ? 'http' : 'ipc';
+  }
+
+  get rpcConnectConfig () {
+    if ('ipc' ===  this.rpcMode) {
+        return {
+            path: this.rpcIpcPath,
+        };
+    } else {
+        return {
+            hostPort: this.rpcHttpPath,
+        };
+    }
+  }
+
+  get rpcHttpPath () {
+    return ('http' === this.rpcMode) ? argv.rpc : null;
+  }
+
+  get rpcIpcPath () {
+    let ipcPath = ('ipc' === this.rpcMode) ? argv.rpc : null;
+
+    if (ipcPath) {
+        return ipcPath;
+    }
+
+    ipcPath = this.userHomePath;
+
+    if (process.platform === 'darwin') {
+        ipcPath += '/Library/Expanse/gexp.ipc';
+    } else if (process.platform === 'freebsd' ||
+       process.platform === 'linux' ||
+       process.platform === 'sunos') {
+        ipcPath += '/.ethereum/gexp.ipc';
+    } else if (process.platform === 'win32') {
+        ipcPath = '\\\\.\\pipe\\gexp.ipc';
+    }
+
+    this._log.debug(`IPC path: ${ipcPath}`);
+
+    return ipcPath;
   }
 
   get nodeType () {
@@ -221,6 +264,45 @@ class Settings {
     return argv.nodeOptions;
   }
 
+  loadUserData (path) {
+      const fullPath = this.constructUserDataPath(path);
+
+      this._log.trace('Load user data', fullPath);
+
+      // check if the file exists
+      try {
+          fs.accessSync(fullPath, fs.R_OK);
+      } catch (err){
+          return null;
+      }
+
+      // try to read it
+      try {
+          return fs.readFileSync(fullPath, {encoding: 'utf8'});
+      } catch (err){
+          this._log.warn(`File not readable: ${fullPath}`, err);
+      }
+
+      return null;
+  }
+
+
+  saveUserData (path, data) {
+      if (!data) return; // return so we dont write null, or other invalid data
+
+      const fullPath = this.constructUserDataPath(path);
+
+      try {
+          fs.writeFileSync(fullPath, data, {encoding: 'utf8'});
+      } catch (err){
+          this._log.warn(`Unable to write to ${fullPath}`, err);
+      }
+  }
+
+
+  constructUserDataPath (filePath) {
+      return path.join(this.userDataPath, filePath);
+  }
 
 }
 

@@ -28,7 +28,7 @@ console.log((request.url.indexOf('mist://interface') !== -1) ? global.interfaceA
 
 
 
-// protocol.registerProtocol('eth', function(request) {
+// protocol.registerProtocol('exp', function(request) {
 //     var url = request.url.substr(7)
 //     return new protocol.RequestStringJob({data: 'Hello'});
 // });
@@ -39,4 +39,4 @@ console.log((request.url.indexOf('mist://interface') !== -1) ? global.interfaceA
 // });
 
 
-// protocol.registerStandardSchemes(['mist','eth', 'bzz']); //'eth', 'bzz'
+// protocol.registerStandardSchemes(['mist','exp', 'bzz']); //'exp', 'bzz'

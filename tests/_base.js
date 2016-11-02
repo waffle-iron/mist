@@ -10,7 +10,7 @@ const Web3 = require('web3');
 const shell = require('shelljs');
 const path = require('path');
 const packageJson = require('../package.json');
-const gethPrivate = require('geth-private');
+const gethPrivate = require('gexp-private');
 const Application = require('spectron').Application;
 
 const chai = require('chai');
@@ -45,9 +45,10 @@ exports.mocha = function(_module, options) {
       switch (platformArch) {
         case 'darwin-x64':
           appPath = path.join(
-            process.cwd(), 
-            `dist_${options.app}`, 
-            `${appFileName}-macosx-${appVers}`,
+            process.cwd(),
+            `dist_${options.app}`,
+            `dist`,
+            `mac`,
             `${appFileName}.app`,
             'Contents',
             'MacOS',
@@ -56,8 +57,8 @@ exports.mocha = function(_module, options) {
           break;
         case 'linux-x64':
           appPath = path.join(
-            process.cwd(), 
-            `dist_${options.app}`, 
+            process.cwd(),
+            `dist_${options.app}`,
             `${appFileName}-linux64-${appVers}`,
             appFileName
           );
@@ -71,8 +72,8 @@ exports.mocha = function(_module, options) {
         throw new Error('Cannot find binary: ' + appPath);
       }
 
-      this.geth = gethPrivate({
-        gethPath: path.join(process.cwd(), 'nodes', 'geth', platformArch, 'geth'),
+      this.gexp = gethPrivate({
+        gethPath: path.join(process.cwd(), 'nodes', 'gexp', platformArch, 'gexp'),
         balance: 5,
         genesisBlock: {
           difficulty: '0x1',
@@ -84,7 +85,7 @@ exports.mocha = function(_module, options) {
         },
       });
 
-      yield this.geth.start();
+      yield this.gexp.start();
 
       this.web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:58545"));
 
@@ -96,11 +97,11 @@ exports.mocha = function(_module, options) {
         quitTimeout: 10000,
         path: appPath,
         args: [
-          '--mode', options.app, 
-          '--loglevel', 'debug', 
-          '--logfile', logFilePath, 
-          '--node-datadir', this.geth.dataDir,
-          '--ipcpath', path.join(this.geth.dataDir, 'geth.ipc')
+          '--mode', options.app,
+          '--loglevel', 'debug',
+          '--logfile', logFilePath,
+          '--node-datadir', this.gexp.dataDir,
+          '--ipcpath', path.join(this.gexp.dataDir, 'gexp.ipc')
         ],
       });
 
@@ -130,8 +131,8 @@ exports.mocha = function(_module, options) {
         yield this.app.stop();
       }
 
-      if (this.geth && this.geth.isRunning) {
-        yield this.geth.stop();
+      if (this.gexp && this.gexp.isRunning) {
+        yield this.gexp.stop();
       }
     },
 
@@ -145,18 +146,18 @@ exports.mocha = function(_module, options) {
 
 const Utils = {
   waitUntil: function*(msg, promiseFn) {
-    yield this.client.waitUntil(promiseFn, 
-      10000, 
-      msg, 
+    yield this.client.waitUntil(promiseFn,
+      10000,
+      msg,
       500);
   },
   getUiElements: function*(selector) {
-    const elems = yield this.client.elements(selector);     
+    const elems = yield this.client.elements(selector);
 
     return elems.value;
   },
   getUiElement: function*(selector) {
-    const elem = yield this.client.element(selector);     
+    const elem = yield this.client.element(selector);
 
     return elem.value;
   },
@@ -166,7 +167,7 @@ const Utils = {
     const existingHandles = (yield client.windowHandles()).value;
 
     yield fnPromise();
-    
+
     yield this.waitUntil('new window visible', function checkForAddWindow() {
       return client.windowHandles().then((handles) => {
         return handles.value.length === existingHandles.length + 1;
@@ -208,7 +209,7 @@ const Utils = {
   getRealAccountBalances: function*() {
     let accounts = this.web3.eth.accounts;
 
-    let balances = accounts.map((acc) => 
+    let balances = accounts.map((acc) =>
       this.web3.fromWei(this.web3.eth.getBalance(acc), 'ether') + ''
     );
 
@@ -251,11 +252,9 @@ const Utils = {
     yield Q.delay(1000);
   },
   startMining: function*() {
-    yield this.geth.consoleExec('miner.start();');
+    yield this.gexp.consoleExec('miner.start();');
   },
   stopMining: function*() {
-    yield this.geth.consoleExec('miner.stop();');
+    yield this.gexp.consoleExec('miner.stop();');
   },
 }
-
-

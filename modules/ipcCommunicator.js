@@ -5,17 +5,18 @@ Window communication
 */
 
 const electron = require('electron');
+const shell = electron.shell;
 
 const app = electron.app;  // Module to control application life.
 const appMenu = require('./menuItems');
 const logger = require('./utils/logger');
 const Windows = require('./windows');
 const ipc = electron.ipcMain;
-
 const _ = global._;
 
 const log = logger.create('ipcCommunicator');
 
+require('./abi.js');
 /*
 
 // windows including webviews
@@ -38,6 +39,11 @@ windows = {
 ipc.on('backendAction_closeApp', function() {
     app.quit();
 });
+
+ipc.on('backendAction_openExternalUrl', function(e, url) {
+    shell.openExternal(url);
+});
+
 ipc.on('backendAction_closePopupWindow', function(e) {
     var windowId = e.sender.getId(),
         senderWindow = Windows.getById(windowId);
@@ -66,11 +72,11 @@ ipc.on('backendAction_sendToOwner', function(e, error, value) {
         let ownerWindow = Windows.getById(senderWindow.ownerId);
 
         if (ownerWindow) {
-            ownerWindow.send('windowMessage', senderWindow.type, error, value);            
+            ownerWindow.send('windowMessage', senderWindow.type, error, value);
         }
 
         if (mainWindow) {
-            mainWindow.send('mistUI_windowMessage', senderWindow.type, senderWindow.ownerId, error, value);
+            mainWindow.send('uiAction_windowMessage', senderWindow.type, senderWindow.ownerId, error, value);
         }
     }
 
@@ -88,14 +94,17 @@ ipc.on('backendAction_setLanguage', function(e, lang){
     }
 });
 
+
 // import presale file
 ipc.on('backendAction_importPresaleFile', function(e, path, pw) {
     const spawn = require('child_process').spawn;
-    const getNodePath = require('./getNodePath.js');
+    const ClientBinaryManager = require('./clientBinaryManager');
     var error = false;
 
+    const binPath = ClientBinaryManager.getClient('gexp').binPath;
+
     // start import process
-    var nodeProcess = spawn(getNodePath('gexp'), ['wallet', 'import', path]);
+    var nodeProcess = spawn(binPath, ['wallet', 'import', path]);
 
     nodeProcess.once('error',function(){
         error = true;
@@ -138,20 +147,38 @@ ipc.on('backendAction_importPresaleFile', function(e, path, pw) {
 
 
 
-
-// MIST API
-ipc.on('mistAPI_requestAccount', function(e){
+var createAccountPopup = function(e){
     Windows.createPopup('requestAccount', {
         ownerId: e.sender.getId(),
         electronOptions: {
-            width: 400, 
-            height: 230, 
+            width: 400,
+            height: 230,
             alwaysOnTop: true,
         },
     });
+};
+
+// MIST API
+ipc.on('mistAPI_createAccount', createAccountPopup);
+
+ipc.on('mistAPI_requestAccount', function(e) {
+    if (global.mode == 'wallet') {
+        createAccountPopup(e);
+    }
+    // Mist
+    else {
+        Windows.createPopup('connectAccount', {
+            ownerId: e.sender.getId(),
+            electronOptions: {
+                width: 460,
+                height: 497,
+                maximizable: false,
+                minimizable: false,
+                alwaysOnTop: true,
+            },
+        });
+    }
 });
-
-
 
 const uiLoggers = {};
 
@@ -171,4 +198,6 @@ ipc.on('console_log', function(event, id, logLevel, logItemsStr) {
     }
 });
 
-
+ipc.on('backendAction_reloadSelectedTab', function(event) {
+    event.sender.send('uiAction_reloadSelectedTab');
+});

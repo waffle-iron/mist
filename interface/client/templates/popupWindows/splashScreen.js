@@ -35,10 +35,15 @@ Template['popupWindows_splashScreen'].onCreated(function(){
         }
     });
 
+    ipc.on('uiAction_clientBinaryStatus', function(e, status) {
+        TemplateVar.set(template, 'text', TAPi18n.__('mist.startScreen.clientBinaries.' + status));
+        TemplateVar.set(template, 'showProgressBar', false);
+        TemplateVar.set(template, 'showStartAppButton', false);            
+        TemplateVar.set(template, 'logText', null);
+    });
+
 
     ipc.on('uiAction_nodeStatus', function(e, status, errorTag) {
-        console.trace('Node status', status, errorTag);
-
         switch (status) {
             case 'starting':
                 TemplateVar.set(template, 'text', TAPi18n.__('mist.startScreen.nodeStarting'));
@@ -161,7 +166,7 @@ Template['popupWindows_splashScreen'].helpers({
     @method iconPath
     */
     'iconPath': function(){
-        return 'file://'+ window.mist.dirname +'/icons/'+ window.mist.mode +'/icon2x.png';
+        return 'file://'+ window.dirname +'/icons/'+ window.mist.mode +'/icon2x.png';
     },
     /**
     Updates the Sync Message live

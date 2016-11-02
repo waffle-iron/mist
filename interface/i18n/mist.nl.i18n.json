@@ -40,7 +40,7 @@
                 "devToolsWebview": "__webview__",
                 "runTests": "Tests uitvoeren",
                 "logFiles": "Toon log bestand",
-                "ethereumNode": "Ethereum Node",
+                "ethereumNode": "Expanse Node",
                 "network": "Netwerk",
                 "mainNetwork": "Hoofdnetwerk",
                 "startMining": "⛏ Start Mining (Alleen testnet)",
@@ -61,7 +61,7 @@
             "nodeStartup": "Het lijkt erop dat de node niet kan worden opgestart, heeft u er al een aan staan? Is deze de database aan het upgraden?",
             "timeSync": {
                 "title": "Uw computer's klok is niet gesynchroniseerd.",
-                "description": "Om succesvol met het Ethereum netwerk te verbinden moet u uw computer's klok synchroniseren met een tijdssynchronisatie server.",
+                "description": "Om succesvol met het Expanse netwerk te verbinden moet u uw computer's klok synchroniseren met een tijdssynchronisatie server.",
                 "win32": "Ga naat uw Internet Tijd Instellingen in uw configuratiescherm en selecteer de optie. Zie deze uitleg voor details: http://www.guidingtech.com/3119/windows-clock-sync/",
                 "linux": "Installeer voor een tijdssynchronisatieserver \"ntp\" via \"apt-get install ntp\".",
                 "darwin": "Om tijdssynchronisatie aan de zetten opent u uw instellingen en activeert u \"Tijd en datum automatisch instellen\"."
@@ -91,12 +91,12 @@
             }
         },
         "startScreen": {
-            "runningNodeFound": "Lopende Ethereum node gevonden!",
-            "startingNode": "Ethereum node starten...",
+            "runningNodeFound": "Lopende Expanse node gevonden!",
+            "startingNode": "Expanse node starten...",
             "startedNode": "Applicatie starten...",
-            "nodeConnectionTimeout": "Ethereum node opstarten niet mogelijk!<br><small>Als u <a href='https://www.ethereum.org/cli#geth' class='button' target='_blank'>Geth geinstalleerd heeft</a>, gebruik dan dit commando om het op te starten: <br> <code>geth --ipcpath __path__</code></small><br> <small><a href='https://github.com/ethereum/mist/issues' class='button' target='_blank'> Of meld een fout </a></small>",
-            "nodeBinaryNotFound": "Geen Ethereun node uitvoerbaar bestand gevonden!<br><small> <a href='https://www.ethereum.org/cli#geth' class='button' target='_blank'> Start er a.u.b. handmatig een. </a> </small>",
-            "nodeSyncing": "Ethereum node moet synchroniseren, even gedult alstublieft...",
+            "nodeConnectionTimeout": "Expanse node opstarten niet mogelijk!<br><small>Als u <a href='https://www.ethereum.org/cli#gexp' class='button' target='_blank'>Gexp geinstalleerd heeft</a>, gebruik dan dit commando om het op te starten: <br> <code>gexp --ipcpath __path__</code></small><br> <small><a href='https://github.com/ethereum/mist/issues' class='button' target='_blank'> Of meld een fout </a></small>",
+            "nodeBinaryNotFound": "Geen Ethereun node uitvoerbaar bestand gevonden!<br><small> <a href='https://www.ethereum.org/cli#gexp' class='button' target='_blank'> Start er a.u.b. handmatig een. </a> </small>",
+            "nodeSyncing": "Expanse node moet synchroniseren, even gedult alstublieft...",
             "nodeSyncInfo": "Blok __currentBlock__ van __highestBlock__ aan het downloaden.",
             "nodeSyncConnecting": "Zoeken naar peers...",
             "nodeSyncProcessing": "Blokken aan het verwerken, even gedult alstublieft...",
@@ -146,13 +146,13 @@
                 }
             },
             "onboarding": {
-                "description" : "Ethereum is een decentraal platform voor het bouwen van applicaties op een blockchain: software die immuun is voor fruide en levenslang waarde en eigendom over kan brengen",
+                "description" : "Expanse is een decentraal platform voor het bouwen van applicaties op een blockchain: software die immuun is voor fruide en levenslang waarde en eigendom over kan brengen",
                 "goToTestnet" : "Gebruik het test netwerk",
                 "goToTestnetDescription" : "Test de technologie vrij in een testongeving, zonder echte ether te gebruiken.",
                 "gotoMainnet" : "Gebruik hoofdnetwerk",
                 "gotoMainnetDescription" : "U zal een beetje Ether nodig hebben om contracten uit te voeren. Geen zorgen, we helpen u met het verkrijgen...",
                 "doYouHaveAWalletFile" : "Heeft u een wallet bestand?",
-                "walletFileDescription" : "<p>Als u mee heeft gedaan met de Ethereum voorverkoop van 2014 zou u een bestand met de naam <code>ethereum_wallet_backup.json</code> ontvangen moeten hebben. U kon deze downloaden na uw contributie en is ook per email verstuurd</p>",
+                "walletFileDescription" : "<p>Als u mee heeft gedaan met de Expanse voorverkoop van 2014 zou u een bestand met de naam <code>ethereum_wallet_backup.json</code> ontvangen moeten hebben. U kon deze downloaden na uw contributie en is ook per email verstuurd</p>",
                 "dropFilesHere" : "Sleep voorverkoop bestand hier",
                 "creating": "Aanmaken...",
                 "importing": "Importeren...",

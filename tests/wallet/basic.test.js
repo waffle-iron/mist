@@ -17,7 +17,7 @@ const test = require('../_base').mocha(module, {
 test['title'] = function*() {
   yield this.client.window(this.mainWindowHandle);
 
-  (yield this.client.getTitle()).should.eql('Ethereum Wallet');
+  (yield this.client.getTitle()).should.eql('Expanse Wallet');
 };
 
 

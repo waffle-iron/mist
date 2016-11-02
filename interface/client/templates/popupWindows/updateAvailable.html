@@ -15,11 +15,11 @@
                             {{i18n "mist.popupWindows.updateAvailable.newVersionAvailable" app=appName }}
                         </h1>
                         <button class="get-update">
-                            {{i18n "mist.popupWindows.updateAvailable.download"}} v{{version}}
+                            {{i18n "mist.popupWindows.updateAvailable.download"}} {{version}}
                         </button>                
                     {{/with}}
                 {{else}}
-                    <h1 class="no-upate">
+                    <h1 class="no-update">
                         {{i18n "mist.popupWindows.updateAvailable.noUpdateFound" app=appName }}
                     </h1>
                 {{/if}}

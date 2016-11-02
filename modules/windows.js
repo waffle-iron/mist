@@ -183,7 +183,7 @@ class Windows {
                 center: true,
                 frame: false,
                 useContentSize: true,
-                titleBarStyle: 'hidden', //hidden-inset: more space
+                titleBarStyle: '', //hidden-inset: more space
                 skipTaskbar: true
             },
         });
@@ -192,14 +192,13 @@ class Windows {
             this.loading.window.center();
         });
 
-        // when a window gets initalized it will us its id
+        // when a window gets initalized it will send us its id
         ipc.on('backendAction_setWindowId', (event) => {
             let id = event.sender.getId();
 
             log.debug(`Set window id`, id);
 
             let bwnd = BrowserWindow.fromWebContents(event.sender);
-
             let wnd = _.find(this._windows, (w) => {
                 return (w.window === bwnd);
             });
@@ -219,7 +218,7 @@ class Windows {
         let existing = this.getByType(type);
 
         if (existing && existing.ownerId === options.ownerId) {
-            log.debug(`Window ${type} with owner ${options.ownerId} already created.`);
+            log.debug(`Window ${type} with owner ${options.ownerId} already existing.`);
 
             return existing;
         }
@@ -246,9 +245,9 @@ class Windows {
             useWeb3: true,
             electronOptions: {
                 title: '',
-                alwaysOnTop: false,
                 width: 400,
                 height: 400,
+                resizable: false,
                 center: true,
                 useContentSize: true,
                 titleBarStyle: 'hidden', //hidden-inset: more space
@@ -259,20 +258,22 @@ class Windows {
             },
         };
 
+        // always show on top of main window
+        let parent = _.find(this._windows, (w) => {
+            return w.type === 'main';
+        });
+
+        if(parent)
+            opts.electronOptions.parent = parent.window;
+
+
         _.extendDeep(opts, options);
-
-        // resizable on by default if alwaysOnTop
-        opts.electronOptions.resizable = 
-            options.resizable || opts.electronOptions.alwaysOnTop;
-
+       
         // mark it as a pop-up window
         opts.isPopup = true;
 
-        opts.electronOptions.resizable = 
-            options.resizable || opts.electronOptions.alwaysOnTop;
-
         if (opts.useWeb3) {
-            opts.electronOptions.webPreferences.preload = __dirname +'/preloader/popupWindows.js';            opts.electronOptions.webPreferences.preload = __dirname +'/preloader/popupWindows.js';
+            opts.electronOptions.webPreferences.preload = __dirname +'/preloader/popupWindows.js';
         } else {
             opts.electronOptions.webPreferences.preload = __dirname +'/preloader/popupWindowsNoWeb3.js';
         }

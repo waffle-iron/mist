@@ -7,5 +7,7 @@ interface/.meteor/dev_bundle
 interface/.meteor/public/
 dist_wallet/
 dist_mist/
+nodes/gexp/
 config.json
-nodes/geth/
+mist.log
+npm-debug.log

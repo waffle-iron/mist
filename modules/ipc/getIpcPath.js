@@ -19,7 +19,7 @@ module.exports = function() {
     var path = Settings.userHomePath;
 
     if(process.platform === 'darwin') {
-        path += '/Library/Expanse/geth.ipc';
+        path += '/Library/Expanse/gexp.ipc';
     }
 
     if(process.platform === 'freebsd' ||
