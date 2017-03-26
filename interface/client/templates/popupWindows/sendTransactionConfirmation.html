@@ -13,7 +13,8 @@
                 {{/if}}
 
                 <div class="container">
-                <div class="transaction-parties">
+                <div class="inner-container">
+                    <div class="transaction-parties">
                     <div>
                         {{#if TemplateVar.get "fromIsContract"}}
                             <i class="overlap-icon icon-doc"></i>
@@ -55,47 +56,35 @@
                 </div>
 
                 {{#if transactionInvalid}}
-                    <p class="info dapp-error"> {{{i18n "mist.popupWindows.sendTransactionConfirmation.estimatedGasError"}}} </p>
+                    <p class="info dapp-error">
+                    {{i18n "mist.popupWindows.sendTransactionConfirmation.estimatedGasError"}}
+                    </p>
                 {{else}}
-                    {{#if $and data (TemplateVar.get "toIsContract")}}
-                        <p class="info">{{{i18n "mist.popupWindows.sendTransactionConfirmation.contractExecutionInfo"}}}</p>
-                    {{/if}}
-
-                    {{#unless to}}
-                        <p class="info">{{{i18n "mist.popupWindows.sendTransactionConfirmation.contractCreationInfo"}}}</p>
-                    {{/unless}}
-                {{/if}}
-
-                {{#if data}}
-
-                    {{#if showFormattedParams}}
-                        <div class="parameters">
-                            <h3>{{{i18n "mist.popupWindows.sendTransactionConfirmation.parameters"}}}
-                                <a href="#" class="toggle-panel">{{{i18n "mist.popupWindows.sendTransactionConfirmation.showRawBytecode"}}}</a>
-                            </h3>
-                            <ol>
-                            {{# each param in params}}
-                                <li>{{> dapp_output output=param }}</li>
-                            {{/each}}
-                            </ol>
-                        </div>
-                    {{else}}
-                        <div class="data">
-                            <h3>{{i18n "mist.popupWindows.sendTransactionConfirmation.data"}}
-
-                            {{# if params}}
-                                <a href="#" class="toggle-panel">{{{i18n "mist.popupWindows.sendTransactionConfirmation.showDecodedParameters"}}}</a>
-                            {{else}}
-                                {{#if to}}
-                                <a class="lookup-function-signature simptip-position-bottom simptip-movable" data-tooltip="{{i18n 'mist.popupWindows.sendTransactionConfirmation.lookupDataExplainer'}}"> {{i18n "mist.popupWindows.sendTransactionConfirmation.lookupData"}}
-                                </a>
-                                {{/if}}
+                    {{#unless $eq (TemplateVar.get "gasError") "notEnoughGas"}}
+                        {{#if $eq (TemplateVar.get "gasError") "overBlockGasLimit"}}
+                            <div class="info dapp-error">
+                                {{i18n "mist.popupWindows.sendTransactionConfirmation.overBlockGasLimit"}}
+                            </div>
+                        {{else}}
+                            {{#if $and data (TemplateVar.get "toIsContract")}}
+                                <p class="info">
+                                {{i18n "mist.popupWindows.sendTransactionConfirmation.contractExecutionInfo"}}
+                                </p>
                             {{/if}}
-                            </h3>
 
-                            <pre>{{{formattedData}}}</pre>
+                            {{#unless to}}
+                                <p class="info">
+                                {{i18n "mist.popupWindows.sendTransactionConfirmation.contractCreationInfo"}}
+                                </p>
+                            {{/unless}}
+
+                        {{/if}}
+                    {{else}}
+                        <div class="info dapp-error not-enough-gas" style="cursor: pointer;">
+                            {{{i18n "mist.popupWindows.sendTransactionConfirmation.notEnoughGas"}}}
                         </div>
-                    {{/if}}
+                    {{/unless}}
+
                 {{/if}}
 
                 <div class="fees">
@@ -138,6 +127,40 @@
                     </ul>
                 </div>
 
+                {{#if data}}
+                    {{#if showFormattedParams}}
+                        <div class="parameters">
+                            <h3>{{i18n "mist.popupWindows.sendTransactionConfirmation.parameters"}}
+                                <a href="#" class="toggle-panel">{{i18n "mist.popupWindows.sendTransactionConfirmation.showRawBytecode"}}</a>
+                            </h3>
+                            <ol>
+                            {{# each param in params}}
+                                <li>{{> dapp_output output=param }}</li>
+                            {{/each}}
+                            </ol>
+                        </div>
+                    {{else}}
+                        <div class="data">
+                            <h3>{{i18n "mist.popupWindows.sendTransactionConfirmation.data"}}
+
+                            {{# if params}}
+                                <a href="#" class="toggle-panel">{{i18n "mist.popupWindows.sendTransactionConfirmation.showDecodedParameters"}}</a>
+                            {{else}}
+                                {{#if to}}
+                                    {{#unless (TemplateVar.get "lookingUpFunctionSignature")}}
+                                        <a class="lookup-function-signature simptip-position-bottom simptip-movable" data-tooltip="{{i18n 'mist.popupWindows.sendTransactionConfirmation.lookupDataExplainer'}}"> {{i18n "mist.popupWindows.sendTransactionConfirmation.lookupData"}}
+                                        </a>
+                                    {{/unless}}
+                                {{/if}}
+                            {{/if}}
+                            </h3>
+
+                            <pre>{{{formattedData}}}</pre>
+                        </div>
+                    {{/if}}
+                {{/if}}
+
+                </div>
                 </div>
                 <footer>
                 {{#if TemplateVar.get "unlocking"}}

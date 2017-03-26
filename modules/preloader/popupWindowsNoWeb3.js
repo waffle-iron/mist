@@ -2,26 +2,21 @@
 @module preloader PopupWindows
 */
 
-require('./include/common')('popup-no-web3');
-const electron = require('electron');
-const remote = electron.remote;
-const mist = require('../mistAPI.js');
-const syncDb = require('../syncDb.js');
-const ipc = electron.ipcRenderer;
-const ipcProviderWrapper = require('../ipc/ipcProviderWrapper.js');
-
+require('./include/common')('popupWindow');
+const { ipcRenderer, remote, webFrame } = require('electron');
+const mist = require('./include/mistAPI.js');
+const dbSync = require('../dbSync.js');
 require('./include/setBasePath')('interface');
+require('./include/openExternal.js');
 
 
-// disable pinch zoom
-electron.webFrame.setZoomLevelLimits(1, 1);
-
-// receive data in the popupWindow
-ipc.on('data', function(e, data) {
+// receive data in from SendData
+ipcRenderer.on('uiAction_sendData', (e, data) => {
     Session.set('data', data);
-})
+});
 
-window.ipc = ipc;
 window.mist = mist();
+window.mistMode = remote.getGlobal('mode');
 window.dirname = remote.getGlobal('dirname');
-window.syncDb = syncDb;
+window.dbSync = dbSync;
+window.ipc = ipcRenderer;
