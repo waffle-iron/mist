@@ -26,7 +26,7 @@ var getMining = function(template) {
         if(!e && res) {
             web3.eth.getHashrate(function(e, res) {
                 if(!e) {
-                    TemplateVar.set(template, 'mining', numeral(res/1000).format('0,0.000'));
+                    TemplateVar.set(template, 'mining', numeral(res/1000).format('0,0.0'));
                 }
             });
         } else {
@@ -48,16 +48,9 @@ Template['elements_nodeInfo'].onCreated(function(){
     // CHECK FOR NETWORK
     web3.eth.getBlock(0, function(e, res){
         if(!e){
-            switch(res.hash) {
-                case '0x0cd786a2425d16f152c658316c423e6ce1181e15c3295826d7c9904cba9ce303':
-                    TemplateVar.set(template, 'network', 'test');
-                    break;
-                case '0xd4e56740f876aef8c010b86a40d5f56745a118d0906a34e69aec8c0db1cb8fa3':
-                    TemplateVar.set(template, 'network', 'main');
-                    break;
-                default:
-                    TemplateVar.set(template, 'network', 'private');
-            }
+            const network = Helpers.detectNetwork(res.hash);
+            TemplateVar.set(template, 'network', network.type); 
+            TemplateVar.set(template, 'networkName', network.name); 
         }
     });
 
@@ -142,13 +135,13 @@ Template['elements_nodeInfo'].helpers({
 
         if (diff>60) {
             Helpers.rerun["10s"].tick();
-            return timeSince.fromNow(true) + " " + TAPi18n.__('mist.nodeInfo.timeSinceBlock');
+            return timeSince.fromNow(true);
         } else if (diff<2) {
             Helpers.rerun["1s"].tick();
             return ' <span class="blue">' + TAPi18n.__('mist.nodeInfo.blockReceived') + '</span>'
         } else {
             Helpers.rerun["1s"].tick();
-            return diff + "s " + TAPi18n.__('mist.nodeInfo.timeSinceBlock')
+            return diff + "s";
         }
     }
 });

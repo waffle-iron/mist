@@ -1,16 +1,16 @@
 #!/bin/bash
 
 # Name of your app.
-APP="Ethereum-Wallet"
+APP="Expanse-Wallet"
 # The path of you app to sign.
-APP_PATH="dist_wallet/Ethereum-Wallet-macosx64-0-4-0/Ethereum-Wallet.app"
+APP_PATH="dist_wallet/Expanse-Wallet-macosx64-0-4-0/Expanse-Wallet.app"
 # The path to the location you want to put the signed package.
 RESULT_PATH="dist_wallet/$APP.pkg"
 # The name of certificates you requested.
-APP_KEY="3rd Party Mac Developer Application: Stiftung Ethereum (3W6577R383)"
+APP_KEY="3rd Party Mac Developer Application: Stiftung Expanse (3W6577R383)"
 #"Mac Developer: Fabian Vogelsteller (YK2P3ZENMX)"
-#"3rd Party Mac Developer Application: Stiftung Ethereum (3W6577R383)"
-INSTALLER_KEY="3rd Party Mac Developer Installer: Stiftung Ethereum (3W6577R383)"
+#"3rd Party Mac Developer Application: Stiftung Expanse (3W6577R383)"
+INSTALLER_KEY="3rd Party Mac Developer Installer: Stiftung Expanse (3W6577R383)"
 
 cd $APP_PATH && find . -name "*.DS_Store" -type f -delete
 cd ../../../
@@ -28,8 +28,8 @@ if [ -d "$FRAMEWORKS_PATH/Squirrel.framework/Versions/A" ]; then
   codesign --deep -fs "$APP_KEY" --entitlements child.plist "$FRAMEWORKS_PATH/Squirrel.framework/Versions/A"
 fi
 
-codesign --deep -fs "$APP_KEY" --entitlements nodes.plist "$FRAMEWORKS_PATH/node/eth/eth"
-codesign --deep -fs "$APP_KEY" --entitlements nodes.plist "$FRAMEWORKS_PATH/node/geth/geth"
+codesign --deep -fs "$APP_KEY" --entitlements nodes.plist "$FRAMEWORKS_PATH/node/exp/exp"
+codesign --deep -fs "$APP_KEY" --entitlements nodes.plist "$FRAMEWORKS_PATH/node/gexp/gexp"
 
 
 codesign -fs "$APP_KEY" --entitlements parent.plist "$APP_PATH"

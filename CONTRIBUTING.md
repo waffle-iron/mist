@@ -4,12 +4,12 @@
 
 **Read the existing issues first, and also search in the closed issues. You may find yours already.**
 
-To help make Mist (Ethereum Wallet) better please file issue with the following basic descriptions:
+To help make Mist-Expanse (Expanse Wallet) better please file issue with the following basic descriptions:
 
 - What do you run? binary from [releases](https://github.com/ethereum/mist/releases) or the development version from the [commandline](https://github.com/ethereum/mist#run-mist)
 - Which version do you used? You can find that in the `VERSION` file in the Mist folder
 - What OS you're on?
-- Provide a log file if necessary, you can find that in the Mist data folder (linux: `~/.config/Mist/*.log`, win: `%APPDATA%/Roaming/Mist/*.log`, MacOSX: `~/Library/Application Support/Mist/*.log`)
+- Provide a log file if necessary, you can find that in the Mist data folder (Linux: `~/.config/Mist/*.log`, Windows: `%APPDATA%/Roaming/Mist/*.log`, MacOSX: `~/Library/Application Support/Mist/*.log`)
 - Ideally also a screenshot, if its an interface issue
 
 
@@ -23,7 +23,7 @@ If you add any modules or files, please give them a module description and or a 
 
 ```
 /**
-The IPC provider backend filter and tunnel all incoming request to the IPC geth bridge.
+The IPC provider backend filter and tunnel all incoming request to the IPC gexp bridge.
 
 @module ipcProviderBackend
 */

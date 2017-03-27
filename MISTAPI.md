@@ -4,7 +4,7 @@ Mist provides an API for dapp developers to use special features only available 
 
 ## Note for dapp developers
 
-To make you dapp compatible with other browsers, its recommended that you check the `mist` object before you use it:
+To make your dapp compatible with other browsers, it is recommended that you check the `mist` object before you use it:
 
 ```js
 if(typeof mist !== 'undefined') {
@@ -15,14 +15,14 @@ if(typeof mist !== 'undefined') {
 You have three different possibilities to use `web3`:
 
 ```js
-// 1. simply use, web3 comes already defined
+// 1. simply use it: web3 comes already defined
 web3
 
-// 2. optional use web3 from mist, OR load if outside of mist
+// 2. optionally use web3 from Mist or load if outside of Mist
 if(typeof web3 === 'undefined')
   web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
 
-// 3. always use web3 provided by the dapp ("Web3" won't be supplied by Mist), but the provider from mist
+// 3. always use web3 provided by the dapp ("Web3" won't be supplied by Mist), but the provider from Mist
 if(typeof web3 !== 'undefined')
   web3 = new Web3(web3.currentProvider);
 else
@@ -32,22 +32,28 @@ else
 ## API
 
 
-- [mist.platform](#mistmenuupdateid-options-callback)
-- [mist.menu](#mistmenuupdateid-options-callback)
-- [mist.menu.setBadge](#mistmenusetbadgetext)(text)
-- [mist.menu.add](#mistmenuaddid-options-callback)(id, options, callback)
-- [mist.menu.update](#mistmenuupdateid--options--callback)(id [, options] [, callback])
-- [mist.menu.remove](#mistmenuremoveid)(id)
+- [mist.platform](#mistplatform)
+- [mist.requestAccount](#mistrequestaccountcallback)(callback)
+- [mist.menu](#mistmenu)
+- [mist.menu.add](#mistmenuaddid-options-callback)([id,] options, callback)
 - [mist.menu.clear](#mistmenuclear)()
+- [mist.menu.remove](#mistmenuremoveid)(id)
+- [mist.menu.select](#mistmenuselectid)(text)
+- [mist.menu.setBadge](#mistmenusetbadgetext)(text)
+- [mist.menu.update](#mistmenuupdateid--options--callback)(id [, options] [, callback])
+- [mist.sounds](#mistsounds)
+- [mist.sounds.bip](#mistsoundsbip)()
+- [mist.sounds.bloop](#mistsoundsbloop)()
+- [mist.sounds.invite](#mistsoundsinvite)()
 
 
 ### mist.platform
 
 Returns the current platform, mist is running on:
 
-- `darwin` // Mac OSX
-- `win32` // Windows
-- `linux`
+- `darwin` (Mac OSX)
+- `win32` (Windows)
+- `linux` (Linux)
 
 
 ***
@@ -76,31 +82,27 @@ Provides functionality to control the sub menu of your dapp, when its add to the
 
 ***
 
-### mist.menu.setBadge(text)
-
-Sets the main badge of your dapp, right below your dapps menu button.
-
-#### Parameters
-
-1. `String` the string used as the badge text
-
-***
-
-### mist.menu.add(id, options, callback)
+### mist.menu.add([id,] options, callback)
 
 Adds/Updates a sub menu entry, which is placed below you dapp button in the sidebar.
 
 #### Parameters
 
-1. `String` and id string to identify your sub menu entry when updating.
+1. `String` **optional** and id string to identify your sub menu entry when updating.
 2. `Object` The menu options:
     - `name` (`String`): The name of the sub menu button.
-    - `badge` (`String|null`): The badge text for the sub menu button, e.g. `50`
-    - `position` (`Number`): The position of the submenu button, `1` is on the top.
-    - `selected` (`Boolean`): whether or not this sub menu entry is currently selected.
-3. `Function` The callback to be called when the sub menu entry is clicked
+    - `badge` (`String|null`) **optional**: The badge text for the sub menu button, e.g. `50`
+    - `position` (`Number`) **optional**: The position of the submenu button, `1` is on the top.
+    - `selected` (`Boolean`) **optional**: whether or not this sub menu entry is currently selected.
+3. `Function` **optional**: The callback to be called when the sub menu entry is clicked
 
-#### Example
+#### Minimal example
+
+```js
+mist.menu.add({name: 'My account'});
+```
+
+#### Full example
 
 ```js
 mist.menu.add('tkrzU', {
@@ -117,6 +119,47 @@ mist.menu.add('tkrzU', {
     Router.go('/send');
 })
 ```
+
+***
+
+### mist.menu.clear()
+
+Removes all sub menu entries. You can use this when you reload your app,
+to clear up wrong menu entries, which might got lost since the last session.
+
+#### Parameters
+
+None
+
+***
+
+### mist.menu.remove(id)
+
+Removes a sub menu entry.
+
+#### Parameters
+
+1. `String` and id string to identify your sub menu.
+
+***
+
+### mist.menu.select(id)
+
+Selects the according sub menu entry.
+
+#### Parameters
+
+1. `String` the sub menu entry identifier
+
+***
+
+### mist.menu.setBadge(text)
+
+Sets the main badge of your dapp, right below your dapps menu button.
+
+#### Parameters
+
+1. `String` the string used as the badge text
 
 ***
 
@@ -145,41 +188,41 @@ mist.menu.update('tkrzU', {
 
 ***
 
-### mist.menu.remove(id)
-
-Removes a sub menu entry.
-
-#### Parameters
-
-1. `String` and id string to identify your sub menu.
-
-***
-
-### mist.menu.clear()
-
-Removes all sub menu entries. You can use this when you reload your app,
-to clear up wrong menu entries, which might got lost since the last session.
-
-#### Parameters
-
-None
-
-***
-
-
 ### mist.sounds
 
-Provides a list of sounds
+Provides a list of sounds.
 
 ***
 
 ### mist.sounds.bip()
 
-Makes a bip counds
+Makes a bip sound.
 
 #### Parameters
 
 None
 
 ***
+
+
+### mist.sounds.bloop()
+
+Makes a bloop sound.
+
+#### Parameters
+
+None
+
+***
+
+### mist.sounds.invite()
+
+Makes an invite sound.
+
+#### Parameters
+
+None
+
+***
+
 

@@ -1,14 +1,11 @@
 
 var config = {
-    name: 'Mist'
+    name: 'Mist-Expanse',
 };
-
 
 // change for wallet
 if(global.mode === 'wallet') {
-    config.name = 'Ξthereum Wallet'
+    config.name = 'Expanse Wallet';
 }
-
-
 
 module.exports = config;

@@ -9,6 +9,7 @@ const spawn = require('child_process').spawn;
 const ipc = require('electron').ipcMain;
 const getNodePath = require('./getNodePath.js');
 const popupWindow = require('./popupWindow.js');
+const log = require('./utils/logger').create('ethereumNodes');
 const logRotate = require('log-rotate');
 
 module.exports = {
@@ -18,11 +19,11 @@ module.exports = {
     @method stopNodes
     */
     stopNodes: function(callback) {
-        console.log('Stopping nodes...');
+        log.info('Stopping nodes...');
 
-        var node = global.nodes.geth || global.nodes.eth;
+        var node = global.nodes.gexp || global.nodes.exp;
 
-        // kill running geth
+        // kill running gexp
         if(node) {
             node.stderr.removeAllListeners('data');
             node.stdout.removeAllListeners('data');
@@ -57,7 +58,7 @@ module.exports = {
     Starts a node of type
 
     @method startNode
-    @param {String} type the node e.g. "geth" or "eth"
+    @param {String} type the node e.g. "gexp" or "exp"
     @param {Boolean} testnet
     @param {Function} callback will be called after successfull start
     */
@@ -67,9 +68,9 @@ module.exports = {
 
         var binPath = getNodePath(type);
 
-        console.log('Start node from '+ binPath);
+        log.info('Start node from '+ binPath);
 
-        if(type === 'eth') {
+        if(type === 'exp') {
 
             var modalWindow = popupWindow.show('unlockMasterPassword', {width: 400, height: 220, alwaysOnTop: true}, null, null, true);
             modalWindow.on('closed', function() {
@@ -121,9 +122,9 @@ module.exports = {
         // set standard node
         fs.writeFile(global.path.USERDATA + '/node', writeType, function(err) {
             if(!err) {
-                console.log('Saved standard node "'+ writeType +'" to file: '+ global.path.USERDATA + '/node');
+                log.debug('Saved standard node "'+ writeType +'" to file: '+ global.path.USERDATA + '/node');
             } else {
-                console.log(err);
+                log.error(err);
             }
         });
 
@@ -133,9 +134,9 @@ module.exports = {
         // write network type
         fs.writeFile(global.path.USERDATA + '/network', global.network , function(err) {
             if(!err) {
-                console.log('Saved network type "'+ global.network +'" to file: '+ global.path.USERDATA + '/network');
+                log.debug('Saved network type "'+ global.network +'" to file: '+ global.path.USERDATA + '/network');
             } else {
-                console.log(err);
+                log.error(err);
             }
         });
     },
@@ -157,13 +158,13 @@ module.exports = {
 
             _this.stopNodes();
 
-            console.log('Starting '+ type +' node...');
+            log.info('Starting '+ type +' node...');
 
             // wrap the starting callback
             var callCb = function(err, res){
 
                 _this._writeNodeToFile(type, testnet);
-                
+
                 cbCalled = true;
                 if(err)
                     error = true;
@@ -174,11 +175,11 @@ module.exports = {
 
             // START TESTNET
             if(testnet) {
-                args = (type === 'geth') ? ['--testnet', '--fast'] : ['--morden', '--unsafe-transactions'];
+                args = (type === 'gexp') ? ['--testnet', '--fast'] : ['--morden', '--unsafe-transactions'];
 
             // START MAINNET
             } else {
-                args = (type === 'geth') ? ['--fast', '--cache','512'] : ['--unsafe-transactions', '--master', pw];
+                args = (type === 'gexp') ? ['--fast', '--cache','512'] : ['--unsafe-transactions', '--master', pw];
                 pw = null;
             }
 
@@ -195,9 +196,9 @@ module.exports = {
                     if(popupCallback) {
                         popupCallback('noBinary');
 
-                        // set default to geth, to prevent beeing unable to start the wallet
-                        if(type === 'eth')
-                            _this._writeNodeToFile('geth', testnet);
+                        // set default to gexp, to prevent beeing unable to start the wallet
+                        if(type === 'exp')
+                            _this._writeNodeToFile('gexp', testnet);
                     }
                 }
             });
@@ -205,27 +206,26 @@ module.exports = {
             // node quit, e.g. master pw wrong
             global.nodes[type].once('exit',function(){
 
-                // If is eth then the password was typed wrong
-                if(!cbCalled && type === 'eth') {
+                // If is exp then the password was typed wrong
+                if(!cbCalled && type === 'exp') {
 
                     if(popupCallback)
                         popupCallback('passwordWrong');
 
-                    // set default to geth, to prevent beeing unable to start the wallet
-                    _this._writeNodeToFile('geth', testnet);
+                    // set default to gexp, to prevent beeing unable to start the wallet
+                    _this._writeNodeToFile('gexp', testnet);
 
-                    console.log('Password wrong '+ type +' node!');
+                    log.warn('Password wrong '+ type +' node!');
                 }
             });
 
-            // we need to read the buff to prevent geth/eth from stop working
+            // we need to read the buff to prevent gexp/exp from stop working
             global.nodes[type].stdout.on('data', function(data) {
 
-                console.log('stdout ', data.toString());
                 if(!cbCalled && _.isFunction(callback)){
 
-                    // (eth) prevent starting, when "Ethereum (++)" didn't appear yet (necessary for the master pw unlock)
-                    if(type === 'eth' && data.toString().indexOf('Ethereum (++)') === -1)
+                    // (exp) prevent starting, when "Expanse (++)" didn't appear yet (necessary for the master pw unlock)
+                    if(type === 'exp' && data.toString().indexOf('Expanse (++)') === -1)
                         return;
                     else if(popupCallback)
                         popupCallback(null);
@@ -237,22 +237,22 @@ module.exports = {
             global.nodes[type].stderr.pipe(logFile);
             global.nodes[type].stderr.on('data', function(data) {
 
-                // dont react on stderr when eth++
-                if(type === 'eth')
+                // dont react on stderr when exp++
+                if(type === 'exp')
                     return;
 
                 // console.log('stderr ', data.toString());
                 if(!cbCalled && _.isFunction(callback)) {
 
-                    // (geth) prevent starying until IPC service is started
-                    if(type === 'geth' && data.toString().indexOf('IPC service started') === -1)
+                    // (gexp) prevent starying until IPC service is started
+                    if(type === 'gexp' && data.toString().indexOf('IPC service started') === -1)
                         return;
 
                     callCb(null);
                 }
             });
 
-            
+
         });
     }
 };
