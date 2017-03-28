@@ -7,24 +7,15 @@
 // BROWSER RELATED
 // Contains the accounts
 Tabs = new Mongo.Collection('tabs', {connection: null});
-pers = new PersistentMinimongo2(Tabs, 'Mist-Expanse');
+LastVisitedPages = new Mongo.Collection('last-visted-pages', {connection: null});
+History = new Mongo.Collection('history', {connection: null});
 
-if(typeof syncMinimongo !== 'undefined')
-    syncMinimongo(Tabs);
-
-
-// Contains the address book
-AddressBook = new Mongo.Collection('address-book', {connection: null});
-new PersistentMinimongo2(AddressBook, 'Mist-Expanse');
-
-
-// Contains the accounts
-DoogleLastVisitedPages = new Mongo.Collection('doogle-last-visted-pages', {connection: null});
-new PersistentMinimongo2(DoogleLastVisitedPages, 'Mist-Expanse');
-
-DoogleHistory = new Mongo.Collection('doogle-history', {connection: null});
-new PersistentMinimongo2(DoogleHistory, 'Mist-Expanse');
-
+// Sync collection from and to the backend loki.js
+if (typeof window.dbSync !== 'undefined') {
+    Tabs = window.dbSync.frontendSyncInit(Tabs);
+    LastVisitedPages = window.dbSync.frontendSyncInit(LastVisitedPages);
+    History = window.dbSync.frontendSyncInit(History);
+}
 
 
 // ETHEREUM RELATED
@@ -35,7 +26,7 @@ new PersistentMinimongo2(DoogleHistory, 'Mist-Expanse');
 
 // contains blockchain meta data
 // LastBlock = new Mongo.Collection('lastblock', {connection: null});
-// new PersistentMinimongo2(LastBlock, 'Mist-Expanse');
+// new PersistentMinimongo2(LastBlock, 'Mist');
 // if(!LastBlock.findOne('latest'))
 //     LastBlock.insert({
 //         _id: 'latest',

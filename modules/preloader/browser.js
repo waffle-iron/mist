@@ -1,26 +1,30 @@
 /**
 @module preloader browser
 */
-const ipc = require('electron').ipcRenderer;
-const mist = require('../mistAPI.js');
-require('../openExternal.js');
-const shell = require('shell');
+require('./include/common')('browser');
+const { ipcRenderer } = require('electron');
+const mist = require('./include/mistAPI.js');
 const BigNumber = require('bignumber.js');
 const ipcProviderWrapper = require('../ipc/ipcProviderWrapper.js');
-var Web3 = require('@expanse/web3');
-const basePath = require('../setBasePath.js');
-require('../getFavicon.js');
-require('../getMetaTags.js');
-require('../openExternal.js');
-
-basePath('interface');
+const Web3 = require('web3');
+require('./include/getFavicon.js');
+require('./include/getMetaTags.js');
+require('./include/setBasePath')('interface');
 
 // notifiy the tab to store the webview id
-ipc.sendToHost('setWebviewId');
+ipcRenderer.sendToHost('setWebviewId');
 
 // destroy the old socket
-ipc.send('ipcProvider-destroy');
+ipcRenderer.send('ipcProvider-destroy');
 
+// Security
+process.on('loaded', function () {
+    Object.freeze(window.JSON);
+    // Object.freeze(window.Function);
+    // Object.freeze(window.Function.prototype);
+    // Object.freeze(window.Array);
+    // Object.freeze(window.Array.prototype);
+});
 
 
 window.mist = mist();

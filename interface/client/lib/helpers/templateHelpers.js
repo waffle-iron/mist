@@ -29,8 +29,9 @@ Template.registerHelper('CurrentBlock', function(){
     return EthBlocks.latest;
 });
 
+
 /**
-Return the current dirname.
+Return the dirname.
 
 @method (dirname)
 **/
@@ -39,12 +40,49 @@ Template.registerHelper('dirname', function(){
 });
 
 /**
+Return the Mist API.
+
+@method (mist)
+**/
+Template.registerHelper('mist', function(){
+    return window.mist;
+});
+
+
+/**
+Return the app mode.
+
+@method (mode)
+**/
+Template.registerHelper('mode', function(){
+    return window.mistMode;
+});
+
+/**
+Return the friendly app name.
+
+@method (appName)
+**/
+Template.registerHelper('appName', function(){
+    return window.mistMode === 'mist' ? 'Mist' : 'Ethereum Wallet';
+});
+
+/**
+Return the app icon path.
+
+@method (iconPath)
+**/
+Template.registerHelper('appIconPath', function(){
+    return 'file://'+ window.dirname +'/icons/'+ window.mistMode +'/icon2x.png';
+});
+
+/**
 Get the current user agent
 
 @method (useragent)
 **/
 Template.registerHelper('useragent', function(){
-    return navigator.userAgent + ' Expanse ' + (mist.mode === 'mist' ? 'Mist' : 'Wallet');
+    return navigator.userAgent + ' Ethereum ' + (window.mistMode === 'mist' ? 'Mist' : 'Wallet');
 });
 
 /**
@@ -91,7 +129,8 @@ Get the account name or display the address
 @param {String} address
 */
 Template.registerHelper('accountNameOrAddress', function(address){
-    if(account = EthAccounts.findOne({address: address}))
+    var account = EthAccounts.findOne({address: address});
+    if(account)
         return account.name;
     else
         return address;
@@ -135,3 +174,9 @@ Formats a number.
 @return {String} The formatted number
 **/
 Template.registerHelper('formatBalance', Helpers.formatBalance);
+
+
+
+
+
+
