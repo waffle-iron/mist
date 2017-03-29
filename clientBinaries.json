@@ -2,36 +2,36 @@
 {
     "clients": {
         "Gexp": {
-            "version": "1.5.9",
+            "version": "1.6.0-unstable",
             "platforms": {
                 "linux": {
                     "x64": {
                         "download": {
-                            "url": "https://gethstore.blob.core.windows.net/builds/geth-linux-amd64-1.5.9-a07539fb.tar.gz",
+                            "url": "http://build.expanse.tech/release/gexp-linux-amd64.tar.gz",
                             "type": "tar",
-                            "md5": "a0b0dda353a655a65c6d3d809ee852fd",
-                            "bin": "gexp-linux-amd64-1.5.9-a07539fb/gexp"
+                            "md5": "902ff290ed7cf3d6f11e7c00da47806d",
+                            "bin": "gexp-linux-amd64/gexp"
                         },
                         "bin": "gexp",
                         "commands": {
                             "sanity": {
                                 "args": ["version"],
-                                "output": [ "Gexp", "1.5.9" ]
+                                "output": [ "Gexp", "1.6.0-unstable" ]
                             }
                         }
                     },
                     "ia32": {
                         "download": {
-                            "url": "https://gethstore.blob.core.windows.net/builds/geth-linux-386-1.5.9-a07539fb.tar.gz",
+                            "url": "http://build.expanse.tech/release/gexp-linux-386.tar.gz",
                             "type": "tar",
-                            "md5": "3198330842cbfc6baa7e7b2624f8f6bd",
-                            "bin": "gexp-linux-386-1.5.9-a07539fb/gexp"
+                            "md5": "41b0e04d89ace2888f60bee88667cc86",
+                            "bin": "gexp-linux-386/gexp"
                         },
                         "bin": "gexp",
                         "commands": {
                             "sanity": {
                                 "args": ["version"],
-                                "output": [ "Gexp", "1.5.9" ]
+                                "output": [ "Gexp", "1.6.0-unstable" ]
                             }
                         }
                     }
@@ -39,16 +39,16 @@
                 "mac": {
                     "x64": {
                         "download": {
-                            "url": "https://gethstore.blob.core.windows.net/builds/geth-darwin-amd64-1.5.9-a07539fb.tar.gz",
+                            "url": "http://build.expanse.tech/release/gexp-darwin-amd64.tar.gz",
                             "type": "tar",
-                            "md5": "6a797a930a0930ec88b810e6b2d204eb",
-                            "bin": "gexp-darwin-amd64-1.5.9-a07539fb/gexp"
+                            "md5": "c7bccd738c5de9904571914319171001",
+                            "bin": "gexp-darwin-amd64/gexp"
                         },
                         "bin": "gexp",
                         "commands": {
                             "sanity": {
                                 "args": ["version"],
-                                "output": [ "Gexp", "1.5.9" ]
+                                "output": [ "Gexp", "1.6.0-unstable" ]
                             }
                         }
                     }
@@ -56,31 +56,31 @@
                 "win": {
                     "x64": {
                         "download": {
-                            "url": "https://gethstore.blob.core.windows.net/builds/geth-windows-amd64-1.5.9-a07539fb.zip",
+                            "url": "http://build.expanse.tech/release/gexp-windows-amd64.zip",
                             "type": "zip",
-                            "md5": "057cdfdf4347ec9d5c0bf0b964f1b97b",
-                            "bin": "gexp-windows-amd64-1.5.9-a07539fb\\gexp.exe"
+                            "md5": "60eee5921f465928757644bf876dde7e",
+                            "bin": "gexp-windows-amd64\\gexp.exe"
                         },
                         "bin": "gexp.exe",
                         "commands": {
                             "sanity": {
                                 "args": ["version"],
-                                "output": [ "Gexp", "1.5.9" ]
+                                "output": [ "Gexp", "1.6.0-unstable" ]
                             }
                         }
                     },
                     "ia32": {
                         "download": {
-                            "url": "https://gethstore.blob.core.windows.net/builds/geth-windows-386-1.5.9-a07539fb.zip",
+                            "url": "http://build.expanse.tech/release/gexp-windows-386.zip",
                             "type": "zip",
-                            "md5": "fa3511985215e151bafdc080e9b1fef6",
-                            "bin": "gexp-windows-386-1.5.9-a07539fb\\gexp.exe"
+                            "md5": "4b7b9d36df5a0953bc4f937c7789b16e",
+                            "bin": "gexp-windows-386\\gexp.exe"
                         },
                         "bin": "gexp.exe",
                         "commands": {
                             "sanity": {
                                 "args": ["version"],
-                                "output": [ "Gexp", "1.5.9" ]
+                                "output": [ "Gexp", "1.6.0-unstable" ]
                             }
                         }
                     }

@@ -551,7 +551,7 @@ let menuTempl = function (webviews) {
     helpMenu.push({
         label: i18n.t('mist.applicationMenu.help.reportBug'),
         click() {
-            shell.openExternal('https://github.com/ethereum/mist/issues');
+            shell.openExternal('https://github.com/expanse-org/mist/issues');
         },
     });
 
