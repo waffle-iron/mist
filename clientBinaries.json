@@ -2,21 +2,21 @@
 {
     "clients": {
         "Gexp": {
-            "version": "1.6.0",
+            "version": "1.6.0-unstable",
             "platforms": {
                 "linux": {
                     "x64": {
                         "download": {
                             "url": "http://build.expanse.tech/release/gexp-linux-amd64.tar.gz",
                             "type": "tar",
-                            "md5": "9eb5b80807eb1be05fa91dcb2540c6fb",
-                            "bin": "gexp-linux-amd64/gexp-linux-amd64"
+                            "md5": "902ff290ed7cf3d6f11e7c00da47806d",
+                            "bin": "gexp-linux-amd64/gexp"
                         },
                         "bin": "gexp",
                         "commands": {
                             "sanity": {
                                 "args": ["version"],
-                                "output": [ "Gexp", "1.6.0" ]
+                                "output": [ "Gexp", "1.6.0-unstable" ]
                             }
                         }
                     },
@@ -24,14 +24,14 @@
                         "download": {
                             "url": "http://build.expanse.tech/release/gexp-linux-386.tar.gz",
                             "type": "tar",
-                            "md5": "7b2cce117bb6f2c4dca7c22d432b1d7f",
-                            "bin": "gexp-linux-386/gexp-linux-386"
+                            "md5": "41b0e04d89ace2888f60bee88667cc86",
+                            "bin": "gexp-linux-386/gexp"
                         },
                         "bin": "gexp",
                         "commands": {
                             "sanity": {
                                 "args": ["version"],
-                                "output": [ "Gexp", "1.6.0" ]
+                                "output": [ "Gexp", "1.6.0-unstable" ]
                             }
                         }
                     }
@@ -41,14 +41,14 @@
                         "download": {
                             "url": "http://build.expanse.tech/release/gexp-darwin-amd64.tar.gz",
                             "type": "tar",
-                            "md5": "836ab1ee10764e2c0c32b8400daddabc ",
-                            "bin": "gexp-darwin-amd64/gexp-darwin-amd64"
+                            "md5": "c7bccd738c5de9904571914319171001",
+                            "bin": "gexp-darwin-amd64/gexp"
                         },
                         "bin": "gexp",
                         "commands": {
                             "sanity": {
                                 "args": ["version"],
-                                "output": [ "Gexp", "1.6.0" ]
+                                "output": [ "Gexp", "1.6.0-unstable" ]
                             }
                         }
                     }
@@ -58,14 +58,14 @@
                         "download": {
                             "url": "http://build.expanse.tech/release/gexp-windows-amd64.zip",
                             "type": "zip",
-                            "md5": "5a557d2886b1b5a36b98c0fe34b424a4",
-                            "bin": "gexp-windows-amd64\\gexp-windows-amd64.exe"
+                            "md5": "a64a8b5e29aaa003414959784f63b645",
+                            "bin": "gexp-windows-amd64\\gexp.exe"
                         },
                         "bin": "gexp.exe",
                         "commands": {
                             "sanity": {
                                 "args": ["version"],
-                                "output": [ "Gexp", "1.6.0" ]
+                                "output": [ "Gexp", "1.6.0-unstable" ]
                             }
                         }
                     },
@@ -73,14 +73,14 @@
                         "download": {
                             "url": "http://build.expanse.tech/release/gexp-windows-386.zip",
                             "type": "zip",
-                            "md5": "363eba79731d0e8022e6015ab40ea0a1",
-                            "bin": "gexp-windows-386\\gexp-windows-386.exe"
+                            "md5": "f771c2e95eaa5ed2907cb7826c6d29f3",
+                            "bin": "gexp-windows-386\\gexp.exe"
                         },
                         "bin": "gexp.exe",
                         "commands": {
                             "sanity": {
                                 "args": ["version"],
-                                "output": [ "Gexp", "1.6.0" ]
+                                "output": [ "Gexp", "1.6.0-unstable" ]
                             }
                         }
                     }
