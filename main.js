@@ -266,9 +266,9 @@ onReady = () => {
 
     const kickStart = () => {
         // client binary stuff
-        //ClientBinaryManager.on('status', (status, data) => {
-        //    Windows.broadcast('uiAction_clientBinaryStatus', status, data);
-        //});
+        ClientBinaryManager.on('status', (status, data) => {
+            Windows.broadcast('uiAction_clientBinaryStatus', status, data);
+        });
 
         // node connection stuff
         ethereumNode.on('nodeConnectionTimeout', () => {

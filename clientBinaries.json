@@ -9,7 +9,7 @@
                         "download": {
                             "url": "http://build.expanse.tech/release/gexp-linux-amd64.tar.gz",
                             "type": "tar",
-                            "md5": "365ccb23d7e8fe8af811c0aad0e5b8fe",
+                            "md5": "9eb5b80807eb1be05fa91dcb2540c6fb",
                             "bin": "gexp-linux-amd64/gexp-linux-amd64"
                         },
                         "bin": "gexp",
@@ -24,7 +24,7 @@
                         "download": {
                             "url": "http://build.expanse.tech/release/gexp-linux-386.tar.gz",
                             "type": "tar",
-                            "md5": "5b26556d663905a20885640196f33f3e",
+                            "md5": "7b2cce117bb6f2c4dca7c22d432b1d7f",
                             "bin": "gexp-linux-386/gexp-linux-386"
                         },
                         "bin": "gexp",
@@ -39,10 +39,10 @@
                 "mac": {
                     "x64": {
                         "download": {
-                            "url": "http://build.expanse.tech/release/gexp-darwin-10.6-amd64.tar.gz",
+                            "url": "http://build.expanse.tech/release/gexp-darwin-amd64.tar.gz",
                             "type": "tar",
-                            "md5": "b78408a0e53bb6d8c9f3724b957c0a8d ",
-                            "bin": "gexp-darwin-10.6-amd64/gexp-darwin-10.6-amd64"
+                            "md5": "836ab1ee10764e2c0c32b8400daddabc ",
+                            "bin": "gexp-darwin-amd64/gexp-darwin-amd64"
                         },
                         "bin": "gexp",
                         "commands": {
@@ -56,10 +56,10 @@
                 "win": {
                     "x64": {
                         "download": {
-                            "url": "http://build.expanse.tech/release/gexp-windows-4.0-amd64.zip",
+                            "url": "http://build.expanse.tech/release/gexp-windows-amd64.zip",
                             "type": "zip",
-                            "md5": "8adb9f45dbae9c718ea63ace5e4f200a",
-                            "bin": "gexp-windows-4.0-amd64\\gexp-windows-4.0-amd64.exe"
+                            "md5": "5a557d2886b1b5a36b98c0fe34b424a4",
+                            "bin": "gexp-windows-amd64\\gexp-windows-amd64.exe"
                         },
                         "bin": "gexp.exe",
                         "commands": {
@@ -71,10 +71,10 @@
                     },
                     "ia32": {
                         "download": {
-                            "url": "http://build.expanse.tech/release/gexp-windows-4.0-386.zip",
+                            "url": "http://build.expanse.tech/release/gexp-windows-386.zip",
                             "type": "zip",
-                            "md5": "51549669f30e10923f9c3c41fbf2f635",
-                            "bin": "gexp-windows-4.0-386\\gexp-windows-4.0-386.exe"
+                            "md5": "363eba79731d0e8022e6015ab40ea0a1",
+                            "bin": "gexp-windows-386\\gexp-windows-386.exe"
                         },
                         "bin": "gexp.exe",
                         "commands": {
