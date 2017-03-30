@@ -14,13 +14,12 @@ frozeman:template-var
 frozeman:reactive-timer
 frozeman:storage
 frozeman:global-notifications
-numeral:numeral
 reactive-var@1.0.11
 sacha:spin
 chuangbo:cookie
 agnito:simptip
 mrt:jquery-ui-sortable
-expanse:web3
+ethereum:web3
 expanse:elements
 ethereum:accounts
 ethereum:blocks
@@ -43,3 +42,5 @@ standard-minifier-js@1.2.1
 tap:i18n-bundler
 shell-server
 ecmascript
+numeral:numeral
+numeral:languages

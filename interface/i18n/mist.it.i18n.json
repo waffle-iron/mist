@@ -80,7 +80,7 @@
             },
             "legacyChain": {
                 "title": "Legacy chain detected",
-                "description": "Your node is currently on the unsupported Expanse Classic chain. To use this chain use tools provided by the ethereum classic project at\nhttps://ethereumclassic.github.io.\n\nTo revert to the main ethereum chain follow the tutorial here:\nhttps://github.com/ethereum/mist/releases/0.8.2"
+                "description": "Your node is currently on the unsupported Expanse Classic chain. To use this chain use tools provided by the ethereum classic project at\nhttps://ethereumclassic.github.io.\n\nTo revert to the main ethereum chain follow the tutorial here:\nhttps://github.com/expanse-org/mist/releases/0.8.2"
             }
         },
         "rightClick": {
@@ -118,7 +118,7 @@
             "runningNodeFound": "Trovato nodo Expanse in esecuzione!",
             "startingNode": "Avvio nodo Expanse ...",
             "startedNode": "Avvio applicazione...",
-            "nodeConnectionTimeout": "Impossibile avviare un nodo Expanse!<br><small>Se <a href='https://www.ethereum.org/cli#gexp' class='button' target='_blank'>hai installato Gexp</a>, usa questo comando per eseguirlo:<br> <code>gexp --ipcpath __path__</code></small><br> <small><a href='https://github.com/ethereum/mist/issues' class='button' target='_blank'> o riporta il problema </a></small>",
+            "nodeConnectionTimeout": "Impossibile avviare un nodo Expanse!<br><small>Se <a href='https://www.ethereum.org/cli#gexp' class='button' target='_blank'>hai installato Gexp</a>, usa questo comando per eseguirlo:<br> <code>gexp --ipcpath __path__</code></small><br> <small><a href='https://github.com/expanse-org/mist/issues' class='button' target='_blank'> o riporta il problema </a></small>",
             "nodeBinaryNotFound": "Impossibile trovare l'eseguibile del nodo Expanse !<br><small> <a href='https://www.ethereum.org/cli#gexp' class='button' target='_blank'> Per favore avvialo manualmente prima. </a> </small>",
             "nodeSyncing": "Il nodo Expanse deve sincronizzarsi, attendere prego...",
             "nodeSyncInfo": "Scaricamento blocco __displayBlock__ di __highestBlock__.",
@@ -133,7 +133,6 @@
             "unableToBindPort": "Expanse node cannot run. Is another instance already running?",
             "nodeSyncInfoStates": "Downloading block __displayBlock__ of __highestBlock__, <br> Downloading chain structure __displayState__ of __displayKnownStates__",
             "nodeSyncFoundPeers": "Connecting to __peers__ peers...",
-            "nodeSyncingStopped": "Expanse node sync stopped",
             "peerSearchTimeout": "Skip peer search",
             "launchApp": "Launch Application",
             "clientBinaries": {
@@ -197,7 +196,9 @@
                 "showRawBytecode": "show raw data",
                 "showDecodedParameters": "show decoded parameters",
                 "lookupData": "Try to decode data",
-                "lookupDataExplainer": "Look this up on the internet"
+                "lookupDataExplainer": "Look this up on the internet",
+                "overBlockGasLimit": "The gas required for this execution could exceed the block gas limit.",
+                "notEnoughGas": "Gas might not be enough to successfully finish this transaction.<br>Click here to increase the gas amount."
             },
             "onboarding": {
                 "description": "Expanse é una piattaforma decentralizzata per costruire applicazioni sfruttando una blockchain: software a prova di manomissione che puó trasferire valore e proprietá vivendo per sempre",

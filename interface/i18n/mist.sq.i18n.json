@@ -80,7 +80,7 @@
             },
             "legacyChain": {
                 "title": "Legacy chain detected",
-                "description": "Your node is currently on the unsupported Expanse Classic chain. To use this chain use tools provided by the ethereum classic project at\nhttps://ethereumclassic.github.io.\n\nTo revert to the main ethereum chain follow the tutorial here:\nhttps://github.com/ethereum/mist/releases/0.8.2"
+                "description": "Your node is currently on the unsupported Expanse Classic chain. To use this chain use tools provided by the ethereum classic project at\nhttps://ethereumclassic.github.io.\n\nTo revert to the main ethereum chain follow the tutorial here:\nhttps://github.com/expanse-org/mist/releases/0.8.2"
             }
         },
         "rightClick": {
@@ -118,7 +118,7 @@
             "runningNodeFound": "U gjet nyje Expansei në punë!",
             "startingNode": "Duke krijuar nyje Expansei...",
             "startedNode": "Duke filluar aplikacionin...",
-            "nodeConnectionTimeout": "Nuk mundi të fillojë krijimin e një nyje Expansei!<br><small>Nëse ju <a href='https://www.ethereum.org/cli#gexp' class='button' target='_blank'>installed Gexp</a>, përdorni këtë komandë ta krijoni atë: <br> <code>gexp --ipcpath __path__</code></small><br> <small><a href='https://github.com/ethereum/mist/issues' class='button' target='_blank'> Ose raportoni një problem </a></small>",
+            "nodeConnectionTimeout": "Nuk mundi të fillojë krijimin e një nyje Expansei!<br><small>Nëse ju <a href='https://www.ethereum.org/cli#gexp' class='button' target='_blank'>installed Gexp</a>, përdorni këtë komandë ta krijoni atë: <br> <code>gexp --ipcpath __path__</code></small><br> <small><a href='https://github.com/expanse-org/mist/issues' class='button' target='_blank'> Ose raportoni një problem </a></small>",
             "nodeBinaryNotFound": "Nuk u gjet nyje binare Expansei!<br><small> <a href='https://www.ethereum.org/cli#gexp' class='button' target='_blank'> Lutemi krijoni një manualisht më parë. </a> </small>",
             "nodeSyncing": "Nyja e Expanseit ka nevojë të sinkronizohet, lutemi prisni...",
             "nodeSyncInfo": "Duke marrë bllokun __currentBlock__ of __highestBlock__.",
@@ -133,7 +133,6 @@
             "unableToBindPort": "Expanse node cannot run. Is another instance already running?",
             "nodeSyncInfoStates": "Downloading block __displayBlock__ of __highestBlock__, <br> Downloading chain structure __displayState__ of __displayKnownStates__",
             "nodeSyncFoundPeers": "Connecting to __peers__ peers...",
-            "nodeSyncingStopped": "Expanse node sync stopped",
             "peerSearchTimeout": "Skip peer search",
             "launchApp": "Launch Application",
             "clientBinaries": {
@@ -197,7 +196,9 @@
                 "showRawBytecode": "show raw data",
                 "showDecodedParameters": "show decoded parameters",
                 "lookupData": "Try to decode data",
-                "lookupDataExplainer": "Look this up on the internet"
+                "lookupDataExplainer": "Look this up on the internet",
+                "overBlockGasLimit": "The gas required for this execution could exceed the block gas limit.",
+                "notEnoughGas": "Gas might not be enough to successfully finish this transaction.<br>Click here to increase the gas amount."
             },
             "onboarding": {
                 "description": "Expanse është një platformë e decentralizuar për ndërtim aplikacionesh në një zinxhir blloqesh (blockchain): tamper-proof software i cili mund të transferojë vlerë dhe pronësi dhe jetë përgjithmonë",

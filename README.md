@@ -215,7 +215,7 @@ It expects installer/zip files to be in the generated folders e.g. `dist_mist/re
 
 ### Code signing for production
 
-**As of [#972](https://github.com/ethereum/mist/pull/972) we've updated the build process and thus need to redo code-signing.**
+**As of [#972](https://github.com/expanse-org/mist/pull/972) we've updated the build process and thus need to redo code-signing.**
 
 
 ## Testing

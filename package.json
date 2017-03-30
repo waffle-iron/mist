@@ -37,7 +37,7 @@
     "underscore": "^1.8.3",
     "underscore-deep-extend": "^1.1.5",
     "uuid": "^3.0.1",
-    "@expanse/web3": "^0.18.2",
+    "web3": "^0.18.2",
     "yargs": "^6.6.0"
   },
   "devDependencies": {

@@ -33,9 +33,10 @@ ejson@1.0.13
 ethereum:accounts@0.3.12
 ethereum:blocks@0.3.2
 ethereum:dapp-styles@0.5.7
-ethereum:elements@0.7.10
-ethereum:tools@0.6.0
 ethereum:web3@0.15.3
+expanse:elements@0.7.2
+expanse:tools@0.5.4
+expanse:web3@0.15.3
 fastclick@1.0.13
 frozeman:animation-helper@0.2.6
 frozeman:global-notifications@0.2.1
@@ -71,6 +72,7 @@ mongo@1.1.14
 mongo-id@1.0.6
 mrt:jquery-ui-sortable@1.10.3
 npm-mongo@2.2.11_2
+numeral:languages@1.5.3
 numeral:numeral@1.5.3_1
 observe-sequence@1.0.14
 ordered-dict@1.0.9

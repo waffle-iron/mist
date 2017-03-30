@@ -98,7 +98,7 @@
             },
             "legacyChain": {
                 "title": "Legacy chain gedetecteerd",
-                "description": "Je node draait momenteel op de niet ondersteunde Expanse Classic chain. Om deze chain te gebruiken dien je de tools te gebruiken van het Expanse Classic project op\nhttps://ethereumclassic.github.io.\n\nOm terug te gaan naar de standaard Expanse chain kun je deze tutorial volgen:\nhttps://github.com/ethereum/mist/releases/0.8.2"
+                "description": "Je node draait momenteel op de niet ondersteunde Expanse Classic chain. Om deze chain te gebruiken dien je de tools te gebruiken van het Expanse Classic project op\nhttps://ethereumclassic.github.io.\n\nOm terug te gaan naar de standaard Expanse chain kun je deze tutorial volgen:\nhttps://github.com/expanse-org/mist/releases/0.8.2"
             }
         },
         "rightClick": {
@@ -137,7 +137,7 @@
             "startingNode": "Expanse node starten...",
             "stoppingNode": "Expanse node stoppen...",
             "startedNode": "Applicatie starten...",
-            "nodeConnectionTimeout": "Expanse node opstarten niet mogelijk!<br><small>Als je <a href='https://www.ethereum.org/cli#geth' class='button' target='_blank'>Geth geinstalleerd hebt</a>, gebruik dan dit commando om het op te starten: <br> <code>geth --ipcpath __path__</code></small><br> <small><a href='https://github.com/ethereum/mist/issues' class='button' target='_blank'> Of meld een fout </a></small>",
+            "nodeConnectionTimeout": "Expanse node opstarten niet mogelijk!<br><small>Als je <a href='https://www.ethereum.org/cli#geth' class='button' target='_blank'>Geth geinstalleerd hebt</a>, gebruik dan dit commando om het op te starten: <br> <code>geth --ipcpath __path__</code></small><br> <small><a href='https://github.com/expanse-org/mist/issues' class='button' target='_blank'> Of meld een fout </a></small>",
             "nodeBinaryNotFound": "Geen Expanse node gevonden!<br><small> <a href='https://www.ethereum.org/cli#geth' class='button' target='_blank'> Start er a.u.b. handmatig een. </a> </small>",
             "nodeStarting": "Expanse node opstarten...",
             "nodeStarted": "Expanse node gestart",
@@ -151,7 +151,6 @@
             "nodeSyncInfoStates": "Blok __displayBlock__ van __highestBlock__ aan het downloaden, <br> Chain structuur __displayState__ van __displayKnownStates__ aan het downloaden",
             "nodeSyncConnecting": "Zoeken naar peers...",
             "nodeSyncFoundPeers": "Verbinden met __peers__ peers...",
-            "nodeSyncingStopped": "Expanse node sync gestopt",
             "peerSearchTimeout": "Sla peer search over",
             "launchApp": "Applicatie Opstarten",
             "clientBinaries": {
@@ -227,7 +226,9 @@
                 "showRawBytecode": "Toon ruwe data",
                 "showDecodedParameters": "Toon gedecodeerde parameters",
                 "lookupData": "Probeer de data te decoderen",
-                "lookupDataExplainer": "Zoek hiernaar op het internet"
+                "lookupDataExplainer": "Zoek hiernaar op het internet",
+                "overBlockGasLimit": "The gas required for this execution could exceed the block gas limit.",
+                "notEnoughGas": "Gas might not be enough to successfully finish this transaction.<br>Click here to increase the gas amount."
             },
             "onboarding": {
                 "description": "Expanse is een decentraal platform voor het bouwen van applicaties op een blockchain: software die immuun is voor fraude en levenslang waarde en eigendom over kan brengen",

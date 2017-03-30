@@ -80,7 +80,7 @@
             },
             "legacyChain": {
                 "title": "Legacy chain detected",
-                "description": "Your node is currently on the unsupported Expanse Classic chain. To use this chain use tools provided by the ethereum classic project at\nhttps://ethereumclassic.github.io.\n\nTo revert to the main ethereum chain follow the tutorial here:\nhttps://github.com/ethereum/mist/releases/0.8.2"
+                "description": "Your node is currently on the unsupported Expanse Classic chain. To use this chain use tools provided by the ethereum classic project at\nhttps://ethereumclassic.github.io.\n\nTo revert to the main ethereum chain follow the tutorial here:\nhttps://github.com/expanse-org/mist/releases/0.8.2"
             }
         },
         "rightClick": {
@@ -118,7 +118,7 @@
             "runningNodeFound": "發現正在運行的以太坊節點！",
             "startingNode": "正在開啓以太坊節點……",
             "startedNode": "正在啓動應用程序……",
-            "nodeConnectionTimeout": "無法開啓以太坊節點！<br><small>如果您已經<a href='https://www.ethereum.org/cli#gexp' class='button' target='_blank'>安裝Gexp</a>，使用此命令運行： <br> <code>gexp --ipcpath __path__</code></small><br> <small><a href='https://github.com/ethereum/mist/issues' class='button' target='_blank'> 或者上報此問題 </a></small>",
+            "nodeConnectionTimeout": "無法開啓以太坊節點！<br><small>如果您已經<a href='https://www.ethereum.org/cli#gexp' class='button' target='_blank'>安裝Gexp</a>，使用此命令運行： <br> <code>gexp --ipcpath __path__</code></small><br> <small><a href='https://github.com/expanse-org/mist/issues' class='button' target='_blank'> 或者上報此問題 </a></small>",
             "nodeBinaryNotFound": "找不到以太坊節點安裝文件！<br><small> <a href='https://www.ethereum.org/cli#gexp' class='button' target='_blank'> 請事先手動開啓一個節點 </a> </small>",
             "nodeSyncing": "需要同步以太坊節點，請等待……",
             "nodeSyncInfo": "正在下載第__displayBlock__塊，共__highestBlock__。",
@@ -134,7 +134,6 @@
             "unableToBindPort": "Expanse node cannot run. Is another instance already running?",
             "nodeSyncInfoStates": "Downloading block __displayBlock__ of __highestBlock__, <br> Downloading chain structure __displayState__ of __displayKnownStates__",
             "nodeSyncFoundPeers": "Connecting to __peers__ peers...",
-            "nodeSyncingStopped": "Expanse node sync stopped",
             "launchApp": "Launch Application",
             "clientBinaries": {
                 "scanning": "Checking for node update...",
@@ -197,7 +196,9 @@
                 "showRawBytecode": "show raw data",
                 "showDecodedParameters": "show decoded parameters",
                 "lookupData": "Try to decode data",
-                "lookupDataExplainer": "Look this up on the internet"
+                "lookupDataExplainer": "Look this up on the internet",
+                "overBlockGasLimit": "The gas required for this execution could exceed the block gas limit.",
+                "notEnoughGas": "Gas might not be enough to successfully finish this transaction.<br>Click here to increase the gas amount."
             },
             "onboarding": {
                 "description": "以太坊是一個用於在區塊鏈上創建應用的去中心化平台：一種用於轉移價值和資產，永遠存在並且無法被篡改的軟體",

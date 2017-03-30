@@ -27,10 +27,11 @@ const cmp = require('semver-compare');
 const parseJson = require('xml2js').parseString;
 
 const options = minimist(process.argv.slice(2), {
-    string: ['platform', 'walletSource'],
+    string: ['platform', 'walletSource', 'test'],
     default: {
         platform: 'all',
         walletSource: 'master',
+        test: 'basic',
     },
 });
 
@@ -44,7 +45,7 @@ if (options.platform.indexOf(',') !== -1) {
 // CONFIG
 
 let type = 'mist';
-let applicationName = 'Mist-Expanse';
+let applicationName = 'Expanse Wallet';
 const electronVersion = require('electron/package.json').version;
 const packJson = require('./package.json');
 
@@ -231,7 +232,7 @@ gulp.task('build-dist', ['copy-i18n'], (cb) => {
         name: applicationName.replace(/\s/, ''),
         productName: applicationName,
         description: applicationName,
-        homepage: 'https://github.com/ethereum/mist',
+        homepage: 'https://github.com/expanse-org/mist',
         build: {
             appId: `com.ethereum.${type}`,
             category: 'public.app-category.productivity',
@@ -363,7 +364,7 @@ gulp.task('upload-binaries', () => {
     const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
 
     // query github releases
-    return got(`https://api.github.com/repos/ethereum/mist/releases?access_token=${GITHUB_TOKEN}`, {
+    return got(`https://api.github.com/repos/expanse-org/mist/releases?access_token=${GITHUB_TOKEN}`, {
         json: true,
     })
     // filter draft with current version's tag
@@ -385,7 +386,7 @@ gulp.task('upload-binaries', () => {
         if (!_.isEmpty(existingAssets)) throw new Error(`Github release draft already contains assets (${existingAssets}); will not upload, please remove and trigger rebuild`);
 
         return githubUpload({
-            url: `https://uploads.github.com/repos/ethereum/mist/releases/${draft.id}/assets{?name}`,
+            url: `https://uploads.github.com/repos/expanse-org/mist/releases/${draft.id}/assets{?name}`,
             token: [GITHUB_TOKEN],
             assets: filePaths,
         }).then((res) => {
@@ -548,8 +549,9 @@ gulp.task('build-nsis', (cb) => {
 
 
 const testApp = (app) => {
+    // gulp test-mist [--test TESTFILEPREFIX]
     return gulp.src([
-        `./tests/${app}/*.test.js`,
+        `./tests/${app}/${options.test}.test.js`,
     ]).pipe(mocha({
         timeout: 60000,
         ui: 'exports',

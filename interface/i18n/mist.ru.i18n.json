@@ -80,7 +80,7 @@
             },
             "legacyChain": {
                 "title": "Legacy chain detected",
-                "description": "Your node is currently on the unsupported Expanse Classic chain. To use this chain use tools provided by the ethereum classic project at\nhttps://ethereumclassic.github.io.\n\nTo revert to the main ethereum chain follow the tutorial here:\nhttps://github.com/ethereum/mist/releases/0.8.2"
+                "description": "Your node is currently on the unsupported Expanse Classic chain. To use this chain use tools provided by the ethereum classic project at\nhttps://ethereumclassic.github.io.\n\nTo revert to the main ethereum chain follow the tutorial here:\nhttps://github.com/expanse-org/mist/releases/0.8.2"
             }
         },
         "rightClick": {
@@ -119,7 +119,7 @@
             "startingNode": "Запуск Expanse-ноды...",
             "stoppingNode": "Остановка Expanse-ноды...",
             "startedNode": "Запуск приложения...",
-            "nodeConnectionTimeout": "Не удалось запустить Expanse-ноду!<br><small>Если вы <a href='https://www.ethereum.org/cli#gexp' class='button' target='_blank'>установили Gexp</a>, используйте следующую команду для запуска: <br> <code>gexp --ipcpath __path__</code></small><br> <small><a href='https://github.com/ethereum/mist/issues' class='button' target='_blank'> Либо сообщите от проблеме </a></small>",
+            "nodeConnectionTimeout": "Не удалось запустить Expanse-ноду!<br><small>Если вы <a href='https://www.ethereum.org/cli#gexp' class='button' target='_blank'>установили Gexp</a>, используйте следующую команду для запуска: <br> <code>gexp --ipcpath __path__</code></small><br> <small><a href='https://github.com/expanse-org/mist/issues' class='button' target='_blank'> Либо сообщите от проблеме </a></small>",
             "nodeBinaryNotFound": "Не найдены программные файлы для Expanse-ноды!<br><small> <a href='https://www.ethereum.org/cli#gexp' class='button' target='_blank'> Пожалуйста, для начала изучите руководство. </a> </small>",
             "nodeStarting": "Expanse-нода запускается...",
             "nodeStarted": "Expanse-нода запущена",
@@ -133,7 +133,6 @@
             "nodeSyncInfoStates": "Загружено блоков __displayBlock__ из __highestBlock__, <br> Загружено частей структуры блокчейна __displayState__ из __displayKnownStates__",
             "nodeSyncConnecting": "Поиск пиров...",
             "nodeSyncFoundPeers": "Количество подключеных пиров __peers__...",
-            "nodeSyncingStopped": "Остановилась синхронизация Expanse-ноды",
             "peerSearchTimeout": "Пропустить поиск пиров",
             "launchApp": "Запуск приложения",
             "clientBinaries": {
@@ -199,7 +198,9 @@
                 "showRawBytecode": "show raw data",
                 "showDecodedParameters": "show decoded parameters",
                 "lookupData": "Try to decode data",
-                "lookupDataExplainer": "Look this up on the internet"
+                "lookupDataExplainer": "Look this up on the internet",
+                "overBlockGasLimit": "The gas required for this execution could exceed the block gas limit.",
+                "notEnoughGas": "Gas might not be enough to successfully finish this transaction.<br>Click here to increase the gas amount."
             },
             "onboarding": {
                 "description": "Expanseium представляет собой децентрализованную платформу основанную на блокчейне для создания надежных и децентрализованных приложений",
