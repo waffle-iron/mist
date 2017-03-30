@@ -6,23 +6,33 @@ Gets the right IPC path
 
 const log = require('../utils/logger').create('getIpcPath');
 
+const Settings = require('../settings');
+
 
 module.exports = function() {
+    var ipcPath = Settings.ipcPath;
+    if (ipcPath) {
+        return ipcPath;
+    }
+    
     var p = require('path');
-    var path = global.path.HOME;
+    var path = Settings.userHomePath;
 
-    if(process.platform === 'darwin')
+    if(process.platform === 'darwin') {
         path += '/Library/Expanse/gexp.ipc';
+    }
 
     if(process.platform === 'freebsd' ||
        process.platform === 'linux' ||
-       process.platform === 'sunos')
+       process.platform === 'sunos') {
         path += '/.expanse/gexp.ipc';
+    }
 
-    if(process.platform === 'win32')
+    if(process.platform === 'win32') {
         path = '\\\\.\\pipe\\gexp.ipc';
-    
-    log.debug('CONNECT to IPC PATH: '+ path);
+    }
+
+    log.debug(`IPC path: ${path}`);
 
     return path;
 };

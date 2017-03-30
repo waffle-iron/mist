@@ -1,0 +1,91 @@
+
+{
+    "clients": {
+        "Gexp": {
+            "version": "1.5.9",
+            "platforms": {
+                "linux": {
+                    "x64": {
+                        "download": {
+                            "url": "https://gethstore.blob.core.windows.net/builds/geth-linux-amd64-1.5.9-a07539fb.tar.gz",
+                            "type": "tar",
+                            "md5": "a0b0dda353a655a65c6d3d809ee852fd",
+                            "bin": "gexp-linux-amd64-1.5.9-a07539fb/gexp"
+                        },
+                        "bin": "gexp",
+                        "commands": {
+                            "sanity": {
+                                "args": ["version"],
+                                "output": [ "Gexp", "1.5.9" ]
+                            }
+                        }
+                    },
+                    "ia32": {
+                        "download": {
+                            "url": "https://gethstore.blob.core.windows.net/builds/geth-linux-386-1.5.9-a07539fb.tar.gz",
+                            "type": "tar",
+                            "md5": "3198330842cbfc6baa7e7b2624f8f6bd",
+                            "bin": "gexp-linux-386-1.5.9-a07539fb/gexp"
+                        },
+                        "bin": "gexp",
+                        "commands": {
+                            "sanity": {
+                                "args": ["version"],
+                                "output": [ "Gexp", "1.5.9" ]
+                            }
+                        }
+                    }
+                },
+                "mac": {
+                    "x64": {
+                        "download": {
+                            "url": "https://gethstore.blob.core.windows.net/builds/geth-darwin-amd64-1.5.9-a07539fb.tar.gz",
+                            "type": "tar",
+                            "md5": "6a797a930a0930ec88b810e6b2d204eb",
+                            "bin": "gexp-darwin-amd64-1.5.9-a07539fb/gexp"
+                        },
+                        "bin": "gexp",
+                        "commands": {
+                            "sanity": {
+                                "args": ["version"],
+                                "output": [ "Gexp", "1.5.9" ]
+                            }
+                        }
+                    }
+                },
+                "win": {
+                    "x64": {
+                        "download": {
+                            "url": "https://gethstore.blob.core.windows.net/builds/geth-windows-amd64-1.5.9-a07539fb.zip",
+                            "type": "zip",
+                            "md5": "057cdfdf4347ec9d5c0bf0b964f1b97b",
+                            "bin": "gexp-windows-amd64-1.5.9-a07539fb\\gexp.exe"
+                        },
+                        "bin": "gexp.exe",
+                        "commands": {
+                            "sanity": {
+                                "args": ["version"],
+                                "output": [ "Gexp", "1.5.9" ]
+                            }
+                        }
+                    },
+                    "ia32": {
+                        "download": {
+                            "url": "https://gethstore.blob.core.windows.net/builds/geth-windows-386-1.5.9-a07539fb.zip",
+                            "type": "zip",
+                            "md5": "fa3511985215e151bafdc080e9b1fef6",
+                            "bin": "gexp-windows-386-1.5.9-a07539fb\\gexp.exe"
+                        },
+                        "bin": "gexp.exe",
+                        "commands": {
+                            "sanity": {
+                                "args": ["version"],
+                                "output": [ "Gexp", "1.5.9" ]
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

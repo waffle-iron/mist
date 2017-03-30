@@ -1,6 +1,6 @@
 Expanse Wallet
-
 The expanse wallet, which allows you to create simple and multisig wallets to manage your exp.
+
 
 The wallet contains its own node, but can also use an already running one, if the IPC path of that node is the standard path.
 (See below)
@@ -13,6 +13,7 @@ On OSX its `/Users/<you>/Library/Expanse/gexp.ipc` on linux `/home/<you>/.expans
 Example:
 
     $ gexp --datadir /my/chain/ --networkid 23 --ipcpath /Users/<you>/Library/Expanse/gexp.ipc
+
 
 
 
@@ -40,7 +41,6 @@ The nodes data is stored at:
 - Mac: ~/Library/Expanse
 - Win: C:\users\app data\roaming\Expanse
 - Linux: ~/.expanse
-
 
 ## Issues
 

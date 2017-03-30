@@ -21,7 +21,7 @@ module.exports = {
     stopNodes: function(callback) {
         log.info('Stopping nodes...');
 
-        var node = global.nodes.geth || global.nodes.eth;
+        var node = global.nodes.gexp || global.nodes.exp;
 
         // kill running gexp
         if(node) {
@@ -164,7 +164,7 @@ module.exports = {
             var callCb = function(err, res){
 
                 _this._writeNodeToFile(type, testnet);
-                
+
                 cbCalled = true;
                 if(err)
                     error = true;
@@ -206,7 +206,7 @@ module.exports = {
             // node quit, e.g. master pw wrong
             global.nodes[type].once('exit',function(){
 
-                // If is eth then the password was typed wrong
+                // If is exp then the password was typed wrong
                 if(!cbCalled && type === 'exp') {
 
                     if(popupCallback)
@@ -219,7 +219,7 @@ module.exports = {
                 }
             });
 
-            // we need to read the buff to prevent geth/eth from stop working
+            // we need to read the buff to prevent gexp/exp from stop working
             global.nodes[type].stdout.on('data', function(data) {
 
                 if(!cbCalled && _.isFunction(callback)){
@@ -252,7 +252,7 @@ module.exports = {
                 }
             });
 
-            
+
         });
     }
 };

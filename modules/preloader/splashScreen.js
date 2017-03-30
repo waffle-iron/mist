@@ -1,15 +1,19 @@
-const ipc = require('electron').ipcRenderer;
-const basePath = require('../setBasePath.js');
-require('../openExternal.js');
+require('./include/common')('splashscreen');
+require('./include/ethereumProvider.js');
+const mist = require('./include/mistAPI.js');
+const { ipcRenderer, remote, webFrame } = require('electron');
 
-basePath('interface');
+require('./include/openExternal.js');
+require('./include/setBasePath')('interface');
+
 
 // get and set language
-ipc.send('backendAction_setLanguage', navigator.language);
+ipcRenderer.send('backendAction_setLanguage', navigator.language);
 
 // disable pinch zoom
-require('web-frame').setZoomLevelLimits(1, 1);
+webFrame.setZoomLevelLimits(1, 1);
 
-window.ipc = ipc;
-window.mode = location.hash.replace('#splashScreen_','');
-window.dirname = __dirname.replace('modules/preloader','').replace('modules\\preloader','');
+window.ipc = ipcRenderer;
+window.mist = mist();
+window.mistMode = remote.getGlobal('mode');
+window.dirname = remote.getGlobal('dirname');
