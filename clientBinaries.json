@@ -2,7 +2,7 @@
 {
     "clients": {
         "Gexp": {
-            "version": "1.6.0-unstable",
+            "version": "1.6.1-beta",
             "platforms": {
                 "linux": {
                     "x64": {
