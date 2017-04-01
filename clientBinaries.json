@@ -9,14 +9,14 @@
                         "download": {
                             "url": "http://build.expanse.tech/release/gexp-linux-amd64.tar.gz",
                             "type": "tar",
-                            "md5": "902ff290ed7cf3d6f11e7c00da47806d",
+                            "md5": "c97aeb131a659f6afdfe58214594f2e7",
                             "bin": "gexp-linux-amd64/gexp"
                         },
                         "bin": "gexp",
                         "commands": {
                             "sanity": {
                                 "args": ["version"],
-                                "output": [ "Gexp", "1.6.0-unstable" ]
+                                "output": [ "Gexp", "1.6.1-beta" ]
                             }
                         }
                     },
@@ -24,14 +24,14 @@
                         "download": {
                             "url": "http://build.expanse.tech/release/gexp-linux-386.tar.gz",
                             "type": "tar",
-                            "md5": "41b0e04d89ace2888f60bee88667cc86",
+                            "md5": "47f562eacdaa6fdbcf5420894722161c",
                             "bin": "gexp-linux-386/gexp"
                         },
                         "bin": "gexp",
                         "commands": {
                             "sanity": {
                                 "args": ["version"],
-                                "output": [ "Gexp", "1.6.0-unstable" ]
+                                "output": [ "Gexp", "1.6.1-beta" ]
                             }
                         }
                     }
@@ -41,14 +41,14 @@
                         "download": {
                             "url": "http://build.expanse.tech/release/gexp-darwin-amd64.tar.gz",
                             "type": "tar",
-                            "md5": "c7bccd738c5de9904571914319171001",
+                            "md5": "355b57f6749769a5a87475021199897e",
                             "bin": "gexp-darwin-amd64/gexp"
                         },
                         "bin": "gexp",
                         "commands": {
                             "sanity": {
                                 "args": ["version"],
-                                "output": [ "Gexp", "1.6.0-unstable" ]
+                                "output": [ "Gexp", "1.6.1-beta" ]
                             }
                         }
                     }
@@ -58,14 +58,14 @@
                         "download": {
                             "url": "http://build.expanse.tech/release/gexp-windows-amd64.zip",
                             "type": "zip",
-                            "md5": "4141064b45e569dfb118296206ceef47",
+                            "md5": "1e13e84470aad793fcb0f587c0d0ce0e",
                             "bin": "gexp-windows-amd64\\gexp.exe"
                         },
                         "bin": "gexp.exe",
                         "commands": {
                             "sanity": {
                                 "args": ["version"],
-                                "output": [ "Gexp", "1.6.0-unstable" ]
+                                "output": [ "Gexp", "1.6.1-beta" ]
                             }
                         }
                     },
@@ -73,14 +73,14 @@
                         "download": {
                             "url": "http://build.expanse.tech/release/gexp-windows-386.zip",
                             "type": "zip",
-                            "md5": "f1afeb5dffd55689dd91e429c169fe20",
+                            "md5": "76d24d411d8c136fc2f9e9e81856a4ac",
                             "bin": "gexp-windows-386\\gexp.exe"
                         },
                         "bin": "gexp.exe",
                         "commands": {
                             "sanity": {
                                 "args": ["version"],
-                                "output": [ "Gexp", "1.6.0-unstable" ]
+                                "output": [ "Gexp", "1.6.1-beta" ]
                             }
                         }
                     }
