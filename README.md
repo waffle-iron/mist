@@ -1,3 +1,4 @@
+[![Stories in Ready](https://badge.waffle.io/expanse-org/mist.png?label=ready&title=Ready)](https://waffle.io/expanse-org/mist?utm_source=badge)
 # Mist Browser
 
 [![Join the chat at https://gitter.im/expanse-org/mist](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/expanse-org/mist?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
